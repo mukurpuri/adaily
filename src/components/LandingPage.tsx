@@ -214,10 +214,9 @@ export default function LandingPage() {
 
           <Link
             href="/invest"
-            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm font-medium transition-colors"
+            className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm transition-colors"
           >
             <span className="hidden sm:inline">Explore Investments →</span>
-            <span className="sm:hidden">Invest →</span>
           </Link>
         </div>
       </nav>

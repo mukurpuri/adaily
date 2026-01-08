@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import EmergencyFundPlannerClient from './EmergencyFundPlannerClient';
 
 export const metadata: Metadata = {
@@ -21,6 +22,10 @@ export const metadata: Metadata = {
 };
 
 export default function EmergencyFundPlannerPage() {
-  return <EmergencyFundPlannerClient />;
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-blue-50/50 via-white to-white" />}>
+      <EmergencyFundPlannerClient />
+    </Suspense>
+  );
 }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ToolHeader } from '@/components/shared';
 import {
@@ -14,6 +15,7 @@ import {
 } from '@/lib/tools/emergencyFund';
 
 export default function EmergencyFundPlannerClient() {
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   const [monthlyExpenses, setMonthlyExpenses] = useState<string>('');
   const [jobStability, setJobStability] = useState<JobStability>('stable');
@@ -22,9 +24,27 @@ export default function EmergencyFundPlannerClient() {
   const [result, setResult] = useState<EmergencyFundResult | null>(null);
   const [showResults, setShowResults] = useState(false);
 
+  // Initialize from URL params
   useEffect(() => {
     setMounted(true);
-  }, []);
+    
+    // Read query params and pre-fill form
+    const expensesParam = searchParams.get('expenses');
+    const stabilityParam = searchParams.get('stability');
+    
+    if (expensesParam) {
+      setMonthlyExpenses(expensesParam);
+    }
+    if (stabilityParam) {
+      // Map URL param to form value
+      const stabilityMap: Record<string, JobStability> = {
+        'stable': 'stable',
+        'somewhat': 'somewhat-unstable',
+        'unstable': 'unstable',
+      };
+      setJobStability(stabilityMap[stabilityParam] || 'stable');
+    }
+  }, [searchParams]);
 
   // Calculate results whenever inputs change
   useEffect(() => {

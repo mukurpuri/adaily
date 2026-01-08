@@ -9,6 +9,7 @@
  */
 
 import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { UserInputs, ScoredBucket } from '@/lib/scoringEngine';
 import { getRecommendations } from '@/lib/scoringEngine';
 import type { GoalType } from '@/lib/investmentBuckets';
@@ -525,6 +526,8 @@ function DetailModal({ result, capital, months, onClose }: {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function InvestPage() {
+  const searchParams = useSearchParams();
+  
   // Form state
   const [showResults, setShowResults] = useState(false);
   const [capitalRaw, setCapitalRaw] = useState<number>(100000);
@@ -537,6 +540,39 @@ export default function InvestPage() {
   
   // Beginner mode - hides advanced options for simpler UX
   const [isBeginnerMode, setIsBeginnerMode] = useState(true);
+
+  // Initialize from URL params
+  useEffect(() => {
+    const amountParam = searchParams.get('amount');
+    const timeParam = searchParams.get('time');
+    const riskParam = searchParams.get('risk');
+    
+    if (amountParam) {
+      const numValue = parseInt(amountParam) || 100000;
+      setCapitalRaw(numValue);
+      setCapitalDisplay(formatIndianNumber(numValue));
+    }
+    
+    if (timeParam) {
+      // Map URL param to form value
+      const timeMap: Record<string, string> = {
+        'short': '6',
+        'medium': '24',
+        'long': '60',
+      };
+      setTimeHorizon(timeMap[timeParam] || '36');
+    }
+    
+    if (riskParam) {
+      // Map URL param to form value
+      const riskMap: Record<string, 'LOW' | 'MEDIUM' | 'HIGH'> = {
+        'low': 'LOW',
+        'medium': 'MEDIUM',
+        'high': 'HIGH',
+      };
+      setRiskPreference(riskMap[riskParam] || 'MEDIUM');
+    }
+  }, [searchParams]);
   
   const handleCapitalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/,/g, '');

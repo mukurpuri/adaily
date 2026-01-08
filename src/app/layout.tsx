@@ -4,6 +4,11 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Adaily - Understand Your Investment Options',
   description: 'A free tool to explore and understand the best investment options for your money in India. Compare FDs, PPF, mutual funds, stocks, and more based on your goals.',
+  icons: {
+    icon: '/logo.svg',
+    shortcut: '/logo.svg',
+    apple: '/logo.svg',
+  },
   keywords: [
     'investment options India',
     'where to invest money',
@@ -67,8 +72,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#f97316" />
       </head>
