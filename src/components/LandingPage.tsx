@@ -107,9 +107,9 @@ export default function LandingPage() {
           </Link>
           
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/tools" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">All Tools</Link>
-            <Link href="/learn/glossary" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">Glossary</Link>
-            <Link href="/about/dna" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">About</Link>
+            <Link href="/tools" className="text-sm text-gray-600 hover:text-orange-500 transition-colors font-semibold">All Tools</Link>
+            <Link href="/learn/glossary" className="text-sm text-gray-600 hover:text-orange-500 transition-colors font-semibold">Glossary</Link>
+            <Link href="/about/dna" className="text-sm text-gray-600 hover:text-orange-500 transition-colors font-semibold">About</Link>
           </div>
 
           <Link
