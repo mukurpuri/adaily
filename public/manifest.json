@@ -1,0 +1,17 @@
+{
+  "name": "Adaily - Your Finance Dashboard",
+  "short_name": "Adaily",
+  "description": "Understand the best investment options for your money in India",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffbeb",
+  "theme_color": "#f97316",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
+
