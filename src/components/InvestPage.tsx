@@ -121,6 +121,79 @@ function FitBadge({ level }: { level: ScoredBucket['fitLevel'] }) {
   );
 }
 
+// Share Results Component
+function ShareButton({ 
+  capital, 
+  timeHorizon, 
+  topResult 
+}: { 
+  capital: number; 
+  timeHorizon: string;
+  topResult: ScoredBucket | null;
+}) {
+  const [copied, setCopied] = useState(false);
+  
+  const handleShare = async () => {
+    if (!topResult) return;
+    
+    const timeLabel = parseInt(timeHorizon) >= 12 
+      ? `${Math.round(parseInt(timeHorizon) / 12)} year${Math.round(parseInt(timeHorizon) / 12) > 1 ? 's' : ''}` 
+      : `${timeHorizon} months`;
+    
+    const shareText = `🎯 My Top Investment Pick from Adaily:
+
+💰 Amount: ₹${formatIndianNumber(capital)}
+⏱️ Duration: ${timeLabel}
+📊 Recommendation: ${topResult.bucket.emoji} ${topResult.bucket.name}
+📈 Expected Returns: ${topResult.bucket.expectedReturns}
+
+Find your best investment options at adaily.in ✨`;
+
+    // Try Web Share API first
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Investment Recommendation - Adaily',
+          text: shareText,
+          url: 'https://adaily.in',
+        });
+        return;
+      } catch {
+        // User cancelled or share failed, fall through to clipboard
+      }
+    }
+    
+    // Fallback to clipboard
+    try {
+      await navigator.clipboard.writeText(shareText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard failed
+      alert('Could not copy to clipboard');
+    }
+  };
+  
+  return (
+    <button
+      onClick={handleShare}
+      className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+    >
+      {copied ? (
+        <>
+          <span className="text-emerald-500">✓</span>
+          <span className="text-emerald-600">Copied!</span>
+        </>
+      ) : (
+        <>
+          <span>📤</span>
+          <span>Share Results</span>
+        </>
+      )}
+    </button>
+  );
+}
+
 function ConfettiEffect() {
   const colors = ['#f97316', '#22c55e', '#3b82f6', '#a855f7', '#eab308', '#ec4899'];
   const particles = useMemo(() => Array.from({ length: 30 }, (_, i) => ({
@@ -149,12 +222,13 @@ function ConfettiEffect() {
 }
 
 
-function CompactCard({ result, rank, capital, months, onSelect }: { 
+function CompactCard({ result, rank, capital, months, onSelect, index }: { 
   result: ScoredBucket; 
   rank: number; 
   capital: number; 
   months: number;
   onSelect: () => void;
+  index: number;
 }) {
   const returnsPercent = parseReturnsPercentage(result.bucket.expectedReturns);
   const futureValue = calculateFutureValue(capital, returnsPercent, months);
@@ -175,7 +249,8 @@ function CompactCard({ result, rank, capital, months, onSelect }: {
 
   return (
     <div 
-      className="bg-white rounded-xl border border-gray-200 cursor-pointer transition-all duration-200 hover:shadow-lg hover:border-brand/50 hover:-translate-y-1 group overflow-hidden"
+      className="bg-white rounded-xl border border-gray-200 cursor-pointer transition-all duration-200 hover:shadow-lg hover:border-brand/50 hover:-translate-y-1 group overflow-hidden animate-fade-in-up"
+      style={{ animationDelay: `${index * 50}ms` }}
       onClick={onSelect}
     >
       {/* Top Progress Bar */}
@@ -187,14 +262,19 @@ function CompactCard({ result, rank, capital, months, onSelect }: {
       </div>
       
       <div className="p-4">
-        {/* Header: Rank, Fit Badge, Risk */}
+        {/* Header: Rank, Badges */}
         <div className="flex items-center justify-between mb-3">
           <span className="bg-brand/15 text-brand text-[13px] font-bold px-2 py-0.5 rounded-full">#{rank}</span>
-          <span className="flex gap-2">
-          <FitBadge level={result.fitLevel} />
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${riskColors[result.bucket.riskLevel]}`}>
-            {result.bucket.riskLevel} Risk
-          </span>
+          <span className="flex gap-1.5 flex-wrap justify-end">
+            {result.bucket.isGovernmentBacked && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 border border-blue-200">
+                🏛️ Govt Backed
+              </span>
+            )}
+            <FitBadge level={result.fitLevel} />
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${riskColors[result.bucket.riskLevel]}`}>
+              {result.bucket.riskLevel} Risk
+            </span>
           </span>
         </div>
         
@@ -204,6 +284,18 @@ function CompactCard({ result, rank, capital, months, onSelect }: {
           <h3 className="font-bold text-gray-900 text-sm leading-tight">{result.bucket.name}</h3>
           <div className="text-brand font-semibold text-xs mt-0.5">{result.bucket.expectedReturns}</div>
         </div>
+        
+        {/* Why This Fits You - Personalized */}
+        {result.whyThisFitsYou && (
+          <div className="bg-gradient-to-r from-brand/5 to-emerald-50 border border-brand/10 rounded-lg p-2.5 mb-3">
+            <div className="text-[10px] text-brand font-bold mb-0.5 flex items-center gap-1">
+              <span>✨</span> Why this fits you
+            </div>
+            <p className="text-[11px] text-gray-600 leading-relaxed">
+              {result.whyThisFitsYou}
+            </p>
+          </div>
+        )}
         
         {/* Money Journey Visual */}
         <div className="bg-gray-50 rounded-lg p-3 mb-3">
@@ -443,6 +535,9 @@ export default function InvestPage() {
   const [goal, setGoal] = useState<GoalType>('GROWTH');
   const [experience, setExperience] = useState<'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'>('BEGINNER');
   
+  // Beginner mode - hides advanced options for simpler UX
+  const [isBeginnerMode, setIsBeginnerMode] = useState(true);
+  
   const handleCapitalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/,/g, '');
     const numValue = parseInt(rawValue) || 0;
@@ -529,13 +624,16 @@ export default function InvestPage() {
         <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-6 py-6">
           {/* Logo & Title */}
           <div className="text-center mb-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="flex items-center justify-center gap-2 mb-3">
               <img src="/logo.svg" alt="Adaily" className="w-10 h-10" />
               <span className="text-2xl font-bold text-gray-900">Adaily</span>
             </div>
-            <h1 className="text-xl font-bold text-gray-900">
-              Understand the best investment options for your money
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Where should you invest?
             </h1>
+            <p className="text-gray-500 text-sm">
+              Answer 4 quick questions. Get personalized recommendations.
+            </p>
           </div>
           
           {/* Form Card */}
@@ -662,13 +760,93 @@ export default function InvestPage() {
                 </div>
               </div>
               
-              {/* Submit Button */}
+              {/* Advanced Options Toggle */}
+              <div className="border-t border-gray-100 pt-4">
+                <button
+                  onClick={() => setIsBeginnerMode(!isBeginnerMode)}
+                  className="w-full flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <span className="flex items-center gap-2">
+                    <span>{isBeginnerMode ? '⚙️' : '✓'}</span>
+                    <span>{isBeginnerMode ? 'Show advanced options' : 'Hide advanced options'}</span>
+                  </span>
+                  <svg 
+                    className={`w-4 h-4 transition-transform ${isBeginnerMode ? '' : 'rotate-180'}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {/* Advanced Options - Hidden in Beginner Mode */}
+                <div className={`overflow-hidden transition-all duration-300 ${isBeginnerMode ? 'max-h-0 opacity-0' : 'max-h-96 opacity-100 mt-4'}`}>
+                  <div className="space-y-4">
+                    {/* Liquidity */}
+                    <div>
+                      <label className="block text-gray-600 font-medium text-sm mb-2">
+                        🔓 Need Quick Access?
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setNeedsLiquidity(true)}
+                          className={`py-2.5 px-4 rounded-xl border transition-all text-sm font-medium ${
+                            needsLiquidity ? 'border-cyan-400 bg-cyan-50 text-cyan-700' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                          }`}
+                        >Yes, anytime</button>
+                        <button
+                          type="button"
+                          onClick={() => setNeedsLiquidity(false)}
+                          className={`py-2.5 px-4 rounded-xl border transition-all text-sm font-medium ${
+                            !needsLiquidity ? 'border-cyan-400 bg-cyan-50 text-cyan-700' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                          }`}
+                        >Can lock it</button>
+                      </div>
+                    </div>
+                    
+                    {/* Experience */}
+                    <div>
+                      <label className="block text-gray-600 font-medium text-sm mb-2">
+                        📚 Investment Experience
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { value: 'BEGINNER', label: 'Beginner', emoji: '🌱' },
+                          { value: 'INTERMEDIATE', label: 'Some', emoji: '🌿' },
+                          { value: 'ADVANCED', label: 'Expert', emoji: '🌳' },
+                        ].map((item) => (
+                          <button
+                            key={item.value}
+                            onClick={() => setExperience(item.value as typeof experience)}
+                            className={`py-2.5 rounded-xl border transition-all text-center ${
+                              experience === item.value
+                                ? 'bg-gray-100 border-gray-400 shadow-sm'
+                                : 'bg-white border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div className="text-base mb-0.5">{item.emoji}</div>
+                            <div className={`text-[10px] font-medium ${experience === item.value ? 'text-gray-700' : 'text-gray-500'}`}>{item.label}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Submit Button - Enhanced CTA */}
               <button
                 onClick={() => setShowResults(true)}
-                className="w-full py-4 bg-brand hover:bg-brand-dark text-white font-semibold rounded-xl transition-all text-lg shadow-lg shadow-brand/20"
+                className="w-full py-4 bg-gradient-to-r from-brand to-orange-500 hover:from-brand-dark hover:to-orange-600 text-white font-bold rounded-xl transition-all text-lg shadow-lg shadow-brand/30 transform hover:scale-[1.02] active:scale-[0.98]"
               >
-                Show me where to invest ✨
+                Find My Best Options →
               </button>
+              
+              <p className="text-center text-xs text-gray-400 mt-2">
+                Free • No signup • Takes 30 seconds
+              </p>
             </div>
           </div>
           
@@ -892,10 +1070,13 @@ export default function InvestPage() {
         <main className="flex-1 overflow-y-auto">
           <div className="p-4 md:p-6 max-w-6xl mx-auto">
 
-            {/* Sort Controls */}
+            {/* Sort Controls & Share */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
-              <div className="text-sm text-gray-500">
-                {sortedRecommendations.length} investment options
+              <div className="flex items-center gap-3">
+                <div className="text-sm text-gray-500">
+                  {sortedRecommendations.length} investment options
+                </div>
+                <ShareButton capital={capitalRaw} timeHorizon={timeHorizon} topResult={topRecommendation} />
               </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
                 <span className="text-xs sm:text-sm text-gray-500">Sort by:</span>
@@ -934,7 +1115,7 @@ export default function InvestPage() {
               </div>
             </div>
 
-            {/* Results - Responsive Grid */}
+            {/* Results - Responsive Grid with Staggered Animation */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
               {sortedRecommendations.map((result, i) => (
                 <CompactCard 
@@ -944,6 +1125,7 @@ export default function InvestPage() {
                   capital={capitalRaw} 
                   months={parseInt(timeHorizon) || 12}
                   onSelect={() => setSelectedBucket(result)}
+                  index={i}
                 />
               ))}
             </div>

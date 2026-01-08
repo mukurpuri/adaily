@@ -32,6 +32,73 @@ export interface ScoredBucket {
   matchReasons: string[];
   warningReasons: string[];
   fitLevel: 'EXCELLENT' | 'GOOD' | 'MODERATE' | 'POOR';
+  /** Personalized "Why this fits you" explanation */
+  whyThisFitsYou: string;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Generate Personalized "Why This Fits You" Explanation
+// ─────────────────────────────────────────────────────────────────────────────
+
+function generateWhyThisFitsYou(
+  bucket: InvestmentBucket, 
+  inputs: UserInputs,
+  matchReasons: string[],
+  fitLevel: 'EXCELLENT' | 'GOOD' | 'MODERATE' | 'POOR'
+): string {
+  const timeInYears = Math.round(inputs.timeHorizonMonths / 12);
+  const timeLabel = timeInYears < 1 ? 'less than a year' : timeInYears === 1 ? '1 year' : `${timeInYears} years`;
+  
+  // Build personalized explanation based on user profile
+  const explanations: string[] = [];
+  
+  // Opening based on fit level
+  if (fitLevel === 'EXCELLENT') {
+    explanations.push(`This is a great match for your ₹${inputs.capital.toLocaleString('en-IN')} over ${timeLabel}.`);
+  } else if (fitLevel === 'GOOD') {
+    explanations.push(`This works well for your ${timeLabel} investment horizon.`);
+  } else {
+    explanations.push(`Consider this option for your portfolio.`);
+  }
+  
+  // Risk alignment
+  if (bucket.riskLevel === inputs.riskPreference) {
+    if (inputs.riskPreference === 'LOW') {
+      explanations.push(`Your capital stays safe with ${bucket.riskLevel.toLowerCase()} risk.`);
+    } else if (inputs.riskPreference === 'HIGH') {
+      explanations.push(`Matches your appetite for higher growth potential.`);
+    } else {
+      explanations.push(`Balanced risk-reward suits your preference.`);
+    }
+  }
+  
+  // Goal-specific insights
+  if (inputs.goal === 'TAX_SAVING' && bucket.taxBenefit) {
+    explanations.push(`Saves you tax under Section 80C.`);
+  } else if (inputs.goal === 'GROWTH' && bucket.riskLevel !== 'LOW') {
+    explanations.push(`Built for wealth accumulation over time.`);
+  } else if (inputs.goal === 'SAFETY') {
+    explanations.push(`Focuses on protecting your principal.`);
+  } else if (inputs.goal === 'INCOME') {
+    explanations.push(`Provides regular income stream.`);
+  }
+  
+  // Experience level
+  if (bucket.experienceRequired === 'BEGINNER' && inputs.experience === 'BEGINNER') {
+    explanations.push(`Perfect for beginners - no complex decisions needed.`);
+  }
+  
+  // Liquidity
+  if (inputs.needsLiquidity && bucket.liquidity === 'HIGH') {
+    explanations.push(`You can access your money anytime if needed.`);
+  }
+  
+  // Time horizon specific
+  if (inputs.timeHorizonMonths >= 60 && bucket.timeHorizon === 'LONG') {
+    explanations.push(`Your ${timeLabel} horizon allows compounding to work its magic.`);
+  }
+  
+  return explanations.slice(0, 3).join(' ');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -251,12 +318,16 @@ function scoreBucket(bucket: InvestmentBucket, inputs: UserInputs): ScoredBucket
   else if (score >= 40) fitLevel = 'MODERATE';
   else fitLevel = 'POOR';
 
+  // Generate personalized "Why this fits you" explanation
+  const whyThisFitsYou = generateWhyThisFitsYou(bucket, inputs, matchReasons, fitLevel);
+
   return {
     bucket,
     score: Math.max(0, Math.min(100, score)),
     matchReasons,
     warningReasons,
     fitLevel,
+    whyThisFitsYou,
   };
 }
 

@@ -26,6 +26,10 @@ export interface InvestmentBucket {
   timeHorizon: TimeHorizon;
   lockInPeriod?: string;
   
+  // Safety indicators
+  /** Is this a government-backed/guaranteed investment? */
+  isGovernmentBacked?: boolean;
+  
   // Suitability
   goals: GoalType[];
   experienceRequired: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
@@ -161,6 +165,7 @@ export const investmentBuckets: InvestmentBucket[] = [
     expectedReturns: '7-7.5% p.a.',
     timeHorizon: 'LONG',
     lockInPeriod: '15 years (partial withdrawal after 6 years)',
+    isGovernmentBacked: true,
     goals: ['SAFETY', 'TAX_SAVING'],
     experienceRequired: 'BEGINNER',
     effortPerWeek: '0 mins',
@@ -197,6 +202,7 @@ export const investmentBuckets: InvestmentBucket[] = [
     expectedReturns: '7-7.5% p.a.',
     timeHorizon: 'MEDIUM',
     lockInPeriod: '5 years',
+    isGovernmentBacked: true,
     goals: ['SAFETY', 'TAX_SAVING'],
     experienceRequired: 'BEGINNER',
     effortPerWeek: '0 mins',
@@ -233,6 +239,7 @@ export const investmentBuckets: InvestmentBucket[] = [
     expectedReturns: '2.5% interest + gold price movement',
     timeHorizon: 'LONG',
     lockInPeriod: '8 years (exit after 5 years allowed)',
+    isGovernmentBacked: true,
     goals: ['SAFETY', 'GROWTH'],
     experienceRequired: 'BEGINNER',
     effortPerWeek: '0 mins',
@@ -588,6 +595,7 @@ export const investmentBuckets: InvestmentBucket[] = [
     expectedReturns: '9-12% p.a.',
     timeHorizon: 'LONG',
     lockInPeriod: 'Till age 60',
+    isGovernmentBacked: true,
     goals: ['TAX_SAVING', 'GROWTH'],
     experienceRequired: 'BEGINNER',
     effortPerWeek: '0 mins',
