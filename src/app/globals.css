@@ -2,8 +2,163 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* ========================================
+   ADAILY DESIGN SYSTEM
+   ======================================== */
+
+/* Import fonts - Satoshi for headings, Inter for body */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap');
+
+/* ========================================
+   TYPOGRAPHY SYSTEM
+   ======================================== */
+
+@layer base {
+  /* Base font setup */
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply font-sans text-gray-900 leading-relaxed;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Headings - Satoshi */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    @apply font-bold leading-tight tracking-tight;
+  }
+
+  /* Heading sizes */
+  h1 {
+    @apply text-3xl sm:text-4xl lg:text-5xl;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    @apply text-2xl sm:text-3xl;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    @apply text-xl sm:text-2xl;
+  }
+
+  h4 {
+    @apply text-lg sm:text-xl font-semibold;
+  }
+
+  h5 {
+    @apply text-base sm:text-lg font-semibold;
+  }
+
+  h6 {
+    @apply text-sm sm:text-base font-semibold;
+  }
+
+  /* Paragraphs */
+  p {
+    @apply text-base leading-relaxed;
+  }
+
+  /* Links */
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  /* Small text */
+  small {
+    @apply text-sm;
+  }
+}
+
+/* ========================================
+   COMPONENT TYPOGRAPHY CLASSES
+   ======================================== */
+
+@layer components {
+  /* Hero headlines */
+  .text-hero {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight;
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  /* Section headlines */
+  .text-section {
+    @apply text-2xl sm:text-3xl font-bold leading-tight;
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  /* Card titles */
+  .text-card-title {
+    @apply text-lg font-semibold leading-snug;
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  }
+
+  /* Body large (intro paragraphs) */
+  .text-body-lg {
+    @apply text-lg sm:text-xl text-gray-600 leading-relaxed;
+  }
+
+  /* Body regular */
+  .text-body {
+    @apply text-base text-gray-600 leading-relaxed;
+  }
+
+  /* Body small (descriptions) */
+  .text-body-sm {
+    @apply text-sm text-gray-500 leading-relaxed;
+  }
+
+  /* Caption/helper text */
+  .text-caption {
+    @apply text-xs text-gray-400;
+  }
+
+  /* Labels */
+  .text-label {
+    @apply text-sm font-medium text-gray-700;
+  }
+
+  /* Badges */
+  .text-badge {
+    @apply text-xs font-medium;
+  }
+
+  .text-badge-sm {
+    @apply text-[10px] font-bold uppercase tracking-wide;
+  }
+
+  /* Stats/Numbers */
+  .text-stat {
+    @apply text-3xl sm:text-4xl font-bold;
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  }
+
+  .text-stat-sm {
+    @apply text-2xl font-bold;
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  }
+
+  /* Button text */
+  .text-btn {
+    @apply text-sm font-semibold;
+  }
+
+  .text-btn-lg {
+    @apply text-base sm:text-lg font-semibold;
+  }
+}
+
+/* ========================================
+   UTILITY STYLES
+   ======================================== */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -29,17 +184,21 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Selection color */
+/* Selection color - Orange brand */
 ::selection {
   background: #fed7aa;
   color: #9a3412;
 }
 
-/* Focus styles */
+/* Focus styles - Accessible */
 *:focus-visible {
   outline: 2px solid #f97316;
   outline-offset: 2px;
 }
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
 
 /* Confetti animation */
 @keyframes confetti {
@@ -74,6 +233,14 @@ html {
   opacity: 0;
 }
 
+/* Staggered fade in */
+.animate-fade-in-up-1 { animation-delay: 0ms; }
+.animate-fade-in-up-2 { animation-delay: 50ms; }
+.animate-fade-in-up-3 { animation-delay: 100ms; }
+.animate-fade-in-up-4 { animation-delay: 150ms; }
+.animate-fade-in-up-5 { animation-delay: 200ms; }
+.animate-fade-in-up-6 { animation-delay: 250ms; }
+
 /* Pulse animation for badges */
 @keyframes subtle-pulse {
   0%, 100% {
@@ -88,3 +255,88 @@ html {
   animation: subtle-pulse 2s ease-in-out infinite;
 }
 
+/* Floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-40px) translateX(-10px);
+  }
+  75% {
+    transform: translateY(-20px) translateX(15px);
+  }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+/* Slow floating animation */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+  66% {
+    transform: translateY(-8px) rotate(-3deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+/* Slow bounce for CTAs */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* ========================================
+   COMPONENT UTILITIES
+   ======================================== */
+
+@layer utilities {
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-xl hover:border-gray-200;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent;
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl;
+  }
+}

@@ -1,6 +1,5 @@
-import InvestPage from '@/components/InvestPage';
+import LandingPage from '@/components/LandingPage';
 
 export default function Home() {
-  return <InvestPage />;
+  return <LandingPage />;
 }
-
