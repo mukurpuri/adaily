@@ -563,7 +563,7 @@ export default function InvestPage() {
               {/* Time Horizon - Slider with Blue theme */}
               <div>
                 <label className="block text-gray-600 font-medium text-sm mb-3">
-                  ⏱️ When do you need the money back?
+                  ⏱️ When do you need the money back
                 </label>
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                   <div className="flex items-center gap-4">
