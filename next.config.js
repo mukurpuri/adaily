@@ -1,16 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable static exports for better SEO
-  output: 'export',
+  // Use Vercel's native Next.js SSR for better SEO
+  // (removed 'output: export' which caused deployment issues)
   
   // Trailing slashes for cleaner URLs
   trailingSlash: true,
   
-  // Image optimization (disabled for static export)
+  // Image optimization
   images: {
-    unoptimized: true,
+    // Allow images from common domains if needed
+    remotePatterns: [],
   },
 };
 
 module.exports = nextConfig;
-
