@@ -43,7 +43,7 @@ export default function GovernmentSchemeSimplePage() {
           <section className="mb-12 p-6 bg-blue-50 rounded-2xl border border-blue-100">
             <h2 className="font-bold text-blue-900 mb-3">TL;DR</h2>
             <p className="text-blue-800 text-sm leading-relaxed">
-              Government schemes are backed by the Indian government — very safe but often have lock-in periods. 
+              Government schemes are backed by the Indian government. Very safe, but often have lock-in periods. 
               PPF and EPF are great for long-term. NPS is for retirement with extra tax benefits. 
               SCSS is for senior citizens. Choose based on your age, goal, and how long you can lock money.
             </p>

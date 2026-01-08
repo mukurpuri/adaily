@@ -31,7 +31,7 @@ const faqSchema = {
       name: 'How much should I save from my first salary?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Aim to save at least 20% of your salary. Start with whatever you can — even 10% is a good beginning. The key is to build the habit early.',
+        text: 'Aim to save at least 20% of your salary. Start with whatever you can, even 10% is a good beginning. The key is to build the habit early.',
       },
     },
     {
@@ -88,7 +88,7 @@ const steps = [
     number: 3,
     title: 'Build your emergency fund first',
     description: 'Before investing anywhere, save 3 months of expenses in a liquid, accessible form. This is your safety net.',
-    tip: 'Keep this in a savings account or liquid mutual fund — not FDs with lock-in.',
+    tip: 'Keep this in a savings account or liquid mutual fund, not FDs with lock-in.',
     icon: '🛡️',
   },
   {

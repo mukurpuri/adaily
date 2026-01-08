@@ -45,7 +45,7 @@ export default function SafetyVsGrowthPage() {
             <p className="text-purple-800 text-sm leading-relaxed">
               Safety = money you can't afford to lose (emergency fund, short-term goals). 
               Growth = money you won't need for 5+ years. The split depends on your timeline, 
-              risk comfort, and age. There's no perfect ratio — just what works for you.
+              risk comfort, and age. There's no perfect ratio, just what works for you.
             </p>
           </section>
 

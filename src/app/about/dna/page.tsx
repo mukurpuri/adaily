@@ -3,12 +3,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Our DNA - What Adaily Stands For',
+  title: 'Our Philosophy - What Adaily Stands For',
   description: 'Adaily is a free, simple financial education platform for Indians. Learn about our philosophy, promises, and how we build tools differently.',
   openGraph: {
-    title: 'Our DNA - What Adaily Stands For',
+    title: 'Our Philosophy - What Adaily Stands For',
     description: 'Simple financial tools, built with care. No signup, no selling, no complexity.',
     url: 'https://adaily.in/about/dna',
+  },
+  alternates: {
+    canonical: 'https://adaily.in/about/dna',
   },
 };
 
@@ -55,8 +58,8 @@ export default function DNAPage() {
             <h2 className="text-xl font-bold text-gray-900 mb-4">What Adaily is</h2>
             <p className="text-gray-600 leading-relaxed">
               Adaily is a free collection of simple financial tools built for people in India. 
-              We help you understand your options — where to invest, how much to save, what 
-              government schemes fit you — without overwhelming you with jargon or pushing 
+              We help you understand your options: where to invest, how much to save, what 
+              government schemes fit you. Without overwhelming you with jargon or pushing 
               products. You come, you use, you learn. That's it.
             </p>
           </section>
@@ -66,11 +69,11 @@ export default function DNAPage() {
             <h2 className="text-xl font-bold text-gray-900 mb-4">What Adaily is not</h2>
             <ul className="space-y-3">
               {[
-                'Not a trading platform — we don\'t execute trades or manage your money',
-                'Not a fintech app — no wallets, no payments, no bank integrations',
-                'Not a lead generation site — we don\'t sell your data to anyone',
-                'Not a subscription service — everything is free, always',
-                'Not financial advice — we educate, we don\'t recommend specific actions',
+                'Not a trading platform. We don\'t execute trades or manage your money',
+                'Not a fintech app. No wallets, no payments, no bank integrations',
+                'Not a lead generation site. We don\'t sell your data to anyone',
+                'Not a subscription service. Everything is free, always',
+                'Not financial advice. We educate, we don\'t recommend specific actions',
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3 text-gray-600">
                   <span className="text-gray-400 mt-0.5">✕</span>
@@ -139,7 +142,7 @@ export default function DNAPage() {
                 tools, everything happens in your browser. We don't store your income, expenses, 
                 age, or any inputs you provide. We don't use cookies to track you. We don't 
                 have analytics that follow you around. We don't have a database of users because 
-                we don't have users — we have visitors who use tools and leave.
+                we don't have users. We have visitors who use tools and leave.
               </p>
               <p className="text-gray-500 text-sm mt-4">
                 The only data we might see is basic website traffic (which pages are popular), 

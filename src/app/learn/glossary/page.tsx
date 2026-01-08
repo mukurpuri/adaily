@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     description: 'Common financial terms explained in plain language with Indian examples.',
     url: 'https://adaily.in/learn/glossary',
   },
+  alternates: {
+    canonical: 'https://adaily.in/learn/glossary',
+  },
 };
 
 const glossaryTerms = [
@@ -88,7 +91,7 @@ const glossaryTerms = [
   },
   {
     term: 'Compounding',
-    definition: 'Earning returns on your returns — money growing on itself.',
+    definition: 'Earning returns on your returns. Money growing on itself.',
     example: '₹1 lakh at 10% = ₹1.1L year 1, ₹1.21L year 2, ₹2.59L year 10.',
   },
   {
@@ -176,7 +179,7 @@ const glossaryTerms = [
 const faqs = [
   {
     q: 'Why do I need to know these terms?',
-    a: 'Understanding basic terms helps you make sense of what banks, apps, and advisors tell you. You don\'t need to memorize everything — just know where to look.',
+    a: 'Understanding basic terms helps you make sense of what banks, apps, and advisors tell you. You don\'t need to memorize everything. Just know where to look.',
   },
   {
     q: 'What\'s the difference between saving and investing?',
@@ -212,7 +215,7 @@ const faqs = [
   },
   {
     q: 'Where should I start as a complete beginner?',
-    a: 'Start with an emergency fund in a savings account. Then explore PPF or a simple index fund SIP. Don\'t rush — understanding matters more than speed.',
+    a: 'Start with an emergency fund in a savings account. Then explore PPF or a simple index fund SIP. Don\'t rush. Understanding matters more than speed.',
   },
 ];
 

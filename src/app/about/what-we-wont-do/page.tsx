@@ -19,7 +19,7 @@ const wontDoList = [
   },
   {
     title: "Push products",
-    explanation: "We don't partner with brokers, AMCs, or banks. We don't earn commissions. When we mention an investment type, it's educational — not a recommendation to buy it.",
+    explanation: "We don't partner with brokers, AMCs, or banks. We don't earn commissions. When we mention an investment type, it's educational, not a recommendation to buy it.",
   },
   {
     title: "Track you",
@@ -53,7 +53,7 @@ const whatWeDoInstead = [
   {
     icon: '📚',
     title: 'Offer learning resources',
-    description: 'Glossaries, guides, and explanations — all free, all in plain language.',
+    description: 'Glossaries, guides, and explanations. All free, all in plain language.',
   },
 ];
 

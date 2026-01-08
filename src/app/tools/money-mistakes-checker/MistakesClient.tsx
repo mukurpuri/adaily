@@ -209,7 +209,7 @@ export default function MistakesClient() {
                       {/* Tone setter */}
                       <div className="bg-blue-50 border border-blue-100 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
                         <p className="text-xs sm:text-sm text-blue-700">
-                          💙 <span className="font-medium">This isn't judgement</span> — everyone has room to improve. 
+                          💙 <span className="font-medium">This isn't judgement.</span> Everyone has room to improve. 
                           These are just patterns to be aware of.
                         </p>
                       </div>

@@ -90,7 +90,7 @@ const faqSchema = {
       name: 'How do I know if an investment is right for me?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Consider your timeline (when you need the money), risk comfort (can you handle drops), and goal. There\'s no universally "right" answer — it depends on your situation.',
+        text: 'Consider your timeline (when you need the money), risk comfort (can you handle drops), and goal. There\'s no universally "right" answer. It depends on your situation.',
       },
     },
   ],
@@ -158,7 +158,7 @@ export default function InvestSavingsIndiaPage() {
                 <li>• Start with an emergency fund before investing</li>
                 <li>• For short-term (1-3 years): FDs, liquid funds, or debt funds</li>
                 <li>• For long-term (5+ years): index funds, PPF, or NPS</li>
-                <li>• No investment is "the best" — it depends on your timeline and risk comfort</li>
+                <li>• No investment is "the best". It depends on your timeline and risk comfort</li>
                 <li>• Start small and learn as you go</li>
               </ul>
             </div>
