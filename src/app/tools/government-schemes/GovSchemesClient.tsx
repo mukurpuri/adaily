@@ -15,6 +15,7 @@ import {
 
 export default function GovSchemesClient() {
   const [mounted, setMounted] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [ageGroup, setAgeGroup] = useState<AgeGroup>('30-45');
   const [goal, setGoal] = useState<Goal>('tax-saving');
   const [lockInOk, setLockInOk] = useState(true);
@@ -75,6 +76,97 @@ export default function GovSchemesClient() {
               title="Government Schemes Explorer"
               subtitle="Discover safe, government-backed investment options that fit your profile."
             />
+          </div>
+
+          {/* About This Tool - Collapsible */}
+          <div className={`mb-4 sm:mb-8 transition-all duration-500 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-blue-100 overflow-hidden">
+              <button
+                onClick={() => setShowAbout(!showAbout)}
+                className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer hover:bg-blue-50/50 transition-colors"
+              >
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2 text-sm sm:text-base">
+                  <span>📖</span> Understand government schemes with examples
+                </h2>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 transition-transform ${showAbout ? 'rotate-180' : ''}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <div className={`px-4 pb-4 sm:px-6 sm:pb-6 ${showAbout ? 'block' : 'hidden'}`}>
+                <p className="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed">
+                  Government-backed schemes are investment options backed by the Indian government, making them among the safest available. 
+                  They often come with tax benefits but may have lock-in periods.
+                </p>
+                
+                <p className="text-xs text-gray-500 mb-2 font-medium">Popular options at a glance:</p>
+                <div className="grid sm:grid-cols-3 gap-2 sm:gap-3 mb-4">
+                  <div className="bg-blue-50 rounded-lg p-3 sm:p-4 border border-blue-100">
+                    <div className="font-semibold text-blue-700 text-xs sm:text-sm mb-1">🏦 PPF</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed">
+                      15-year lock-in. Tax-free returns. Great for retirement savings.
+                    </div>
+                  </div>
+                  <div className="bg-teal-50 rounded-lg p-3 sm:p-4 border border-teal-100">
+                    <div className="font-semibold text-teal-600 text-xs sm:text-sm mb-1">💼 NPS</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed">
+                      For retirement. Mix of equity and debt. Additional tax benefit under 80CCD.
+                    </div>
+                  </div>
+                  <div className="bg-amber-50 rounded-lg p-3 sm:p-4 border border-amber-100">
+                    <div className="font-semibold text-amber-600 text-xs sm:text-sm mb-1">✉️ NSC</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed">
+                      5-year lock-in. Fixed returns. Good for conservative savers.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-emerald-50 rounded-lg p-3 sm:p-4 border border-emerald-100 mb-4">
+                  <div className="flex items-start gap-2">
+                    <span className="text-lg">🛡️</span>
+                    <div>
+                      <div className="font-semibold text-emerald-800 text-xs sm:text-sm mb-1">Why government-backed?</div>
+                      <div className="text-[10px] sm:text-xs text-gray-600 leading-relaxed">
+                        These are backed by the Government of India, so your principal is safe. 
+                        However, returns may be lower than market-linked options. Best for the <span className="font-medium text-emerald-700">"safety" part</span> of your portfolio.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-100 my-4"></div>
+
+                <div className="text-xs sm:text-sm text-gray-600 space-y-3">
+                  <p className="font-medium text-gray-800 flex items-center gap-1.5">
+                    <span>💡</span> Example: Kavya's choice
+                  </p>
+                  
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <ul className="space-y-1 text-gray-600">
+                      <li>• Age: <span className="font-medium">32 years</span></li>
+                      <li>• Goal: <span className="font-medium">Tax saving</span></li>
+                      <li>• Lock-in: <span className="font-medium">Okay with it</span></li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                    <div className="text-blue-700 font-medium mb-1">Options that fit:</div>
+                    <ul className="text-[10px] sm:text-xs text-blue-600 space-y-0.5">
+                      <li>• <span className="font-medium">PPF</span> - Long-term, tax-free returns</li>
+                      <li>• <span className="font-medium">NPS</span> - Extra tax benefit + retirement</li>
+                      <li>• <span className="font-medium">ELSS</span> - Shortest lock-in (3 years), market-linked</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <p className="text-[10px] sm:text-xs text-gray-400 italic mt-4">
+                  This is educational information. Please verify current rates and rules before investing.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">

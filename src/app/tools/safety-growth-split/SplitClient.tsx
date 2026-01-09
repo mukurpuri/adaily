@@ -15,6 +15,7 @@ import {
 
 export default function SplitClient() {
   const [mounted, setMounted] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [age, setAge] = useState<string>('30');
   const [timeHorizon, setTimeHorizon] = useState<TimeHorizon>('3-5y');
   const [riskComfort, setRiskComfort] = useState<RiskComfort>('medium');
@@ -80,6 +81,87 @@ export default function SplitClient() {
               title="Safety vs Growth Split"
               subtitle="Find a conceptual balance between protecting your money and growing it."
             />
+          </div>
+
+          {/* About This Tool - Collapsible */}
+          <div className={`mb-4 sm:mb-8 transition-all duration-500 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-purple-100 overflow-hidden">
+              <button
+                onClick={() => setShowAbout(!showAbout)}
+                className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer hover:bg-purple-50/50 transition-colors"
+              >
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2 text-sm sm:text-base">
+                  <span>📖</span> Understand asset allocation with an example
+                </h2>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 transition-transform ${showAbout ? 'rotate-180' : ''}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <div className={`px-4 pb-4 sm:px-6 sm:pb-6 ${showAbout ? 'block' : 'hidden'}`}>
+                <p className="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed">
+                  Asset allocation means dividing your money between <strong>safe investments</strong> (that protect capital) and <strong>growth investments</strong> (that build wealth over time). 
+                  The right balance depends on when you need the money and how much risk you can handle.
+                </p>
+                
+                <p className="text-xs text-gray-500 mb-2 font-medium">Common splits by situation:</p>
+                <div className="grid sm:grid-cols-3 gap-2 sm:gap-3 mb-4">
+                  <div className="bg-blue-50 rounded-lg p-3 sm:p-4 border border-blue-100">
+                    <div className="font-semibold text-blue-700 text-xs sm:text-sm mb-1">🛡️ Conservative</div>
+                    <div className="text-base sm:text-lg font-bold text-blue-800">80/20</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed mt-1">
+                      80% safety, 20% growth. For short horizons or low risk tolerance.
+                    </div>
+                  </div>
+                  <div className="bg-purple-50 rounded-lg p-3 sm:p-4 border border-purple-100">
+                    <div className="font-semibold text-purple-600 text-xs sm:text-sm mb-1">⚖️ Balanced</div>
+                    <div className="text-base sm:text-lg font-bold text-purple-700">50/50</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed mt-1">
+                      Equal split. For medium-term goals with moderate risk comfort.
+                    </div>
+                  </div>
+                  <div className="bg-emerald-50 rounded-lg p-3 sm:p-4 border border-emerald-100">
+                    <div className="font-semibold text-emerald-600 text-xs sm:text-sm mb-1">📈 Aggressive</div>
+                    <div className="text-base sm:text-lg font-bold text-emerald-700">30/70</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed mt-1">
+                      30% safety, 70% growth. For long horizons and high risk tolerance.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-100 my-4"></div>
+
+                <div className="text-xs sm:text-sm text-gray-600 space-y-3">
+                  <p className="font-medium text-gray-800 flex items-center gap-1.5">
+                    <span>💡</span> Example: Priya's allocation
+                  </p>
+                  
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <ul className="space-y-1 text-gray-600">
+                      <li>• Age: <span className="font-medium">28 years</span></li>
+                      <li>• Goal: <span className="font-medium">Retirement in 30+ years</span></li>
+                      <li>• Risk comfort: <span className="font-medium">Medium</span></li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-purple-50 rounded-lg p-3 border border-purple-100">
+                    <div className="text-purple-700">
+                      Suggested split: <span className="font-bold">40% Safety / 60% Growth</span>
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-purple-600 mt-1">
+                      With 30+ years, she can ride out market ups and downs. More growth now, shift to safety later.
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-[10px] sm:text-xs text-gray-400 italic mt-4">
+                  This is a conceptual framework, not personalized advice. Your needs may differ.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">

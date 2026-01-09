@@ -66,6 +66,7 @@ function numberToIndianWords(num: number): string {
 
 export default function MistakesClient() {
   const [mounted, setMounted] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   
   // Analytics tracking
   const { trackCalculation, trackResultView } = useToolAnalytics('money-mistakes-checker');
@@ -157,6 +158,90 @@ export default function MistakesClient() {
               title="Money Mistakes Checker"
               subtitle="A gentle check on common money habits. No judgement, just insights."
             />
+          </div>
+
+          {/* About This Tool - Collapsible */}
+          <div className={`mb-4 sm:mb-8 transition-all duration-500 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-orange-100 overflow-hidden">
+              <button
+                onClick={() => setShowAbout(!showAbout)}
+                className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer hover:bg-orange-50/50 transition-colors"
+              >
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2 text-sm sm:text-base">
+                  <span>📖</span> Understand common money mistakes with examples
+                </h2>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 transition-transform ${showAbout ? 'rotate-180' : ''}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <div className={`px-4 pb-4 sm:px-6 sm:pb-6 ${showAbout ? 'block' : 'hidden'}`}>
+                <p className="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed">
+                  Money mistakes are common habits that can quietly hurt your financial health. 
+                  The good news? Most are easy to fix once you spot them. This tool helps you catch them early.
+                </p>
+                
+                <p className="text-xs text-gray-500 mb-2 font-medium">Common patterns to watch for:</p>
+                <div className="grid sm:grid-cols-2 gap-2 sm:gap-3 mb-4">
+                  <div className="bg-amber-50 rounded-lg p-3 sm:p-4 border border-amber-100">
+                    <div className="font-semibold text-amber-700 text-xs sm:text-sm mb-1">💸 Low savings rate</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed">
+                      Saving less than 10% of income. Even small increases help over time.
+                    </div>
+                  </div>
+                  <div className="bg-orange-50 rounded-lg p-3 sm:p-4 border border-orange-100">
+                    <div className="font-semibold text-orange-600 text-xs sm:text-sm mb-1">🏦 Idle cash</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed">
+                      Keeping long-term money in savings accounts. Inflation eats it slowly.
+                    </div>
+                  </div>
+                  <div className="bg-red-50 rounded-lg p-3 sm:p-4 border border-red-100">
+                    <div className="font-semibold text-red-600 text-xs sm:text-sm mb-1">⚠️ Risk before buffer</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed">
+                      Investing in stocks/crypto without an emergency fund first.
+                    </div>
+                  </div>
+                  <div className="bg-rose-50 rounded-lg p-3 sm:p-4 border border-rose-100">
+                    <div className="font-semibold text-rose-600 text-xs sm:text-sm mb-1">📋 High EMI burden</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed">
+                      EMIs taking more than 40% of income, leaving little room to save.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-100 my-4"></div>
+
+                <div className="text-xs sm:text-sm text-gray-600 space-y-3">
+                  <p className="font-medium text-gray-800 flex items-center gap-1.5">
+                    <span>💡</span> Example: Amit's check
+                  </p>
+                  
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <ul className="space-y-1 text-gray-600">
+                      <li>• Income: <span className="font-medium">₹60,000/month</span></li>
+                      <li>• Savings: <span className="font-medium">₹3,000/month</span> (5%)</li>
+                      <li>• Money in: <span className="font-medium">Savings account + Crypto</span></li>
+                      <li>• No emergency fund</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-orange-50 rounded-lg p-3 border border-orange-100">
+                    <div className="text-orange-700 font-medium mb-1">Issues spotted:</div>
+                    <ul className="text-[10px] sm:text-xs text-orange-600 space-y-0.5">
+                      <li>• Low savings rate (target: at least 10-20%)</li>
+                      <li>• Risk before buffer (crypto without emergency fund)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <p className="text-[10px] sm:text-xs text-gray-400 italic mt-4">
+                  This is a self-check, not judgement. Everyone starts somewhere.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
