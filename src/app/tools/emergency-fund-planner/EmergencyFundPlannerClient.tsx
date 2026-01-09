@@ -456,15 +456,17 @@ export default function EmergencyFundPlannerClient() {
                 <div className="space-y-4 sm:space-y-6">
                   {/* Main Result Card */}
                   <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl shadow-blue-200 p-4 sm:p-6 md:p-8 text-white">
-                    <div className="flex items-center justify-between mb-3 sm:mb-4">
-                      <span className="text-blue-100 text-xs sm:text-sm font-medium">Your safety net target</span>
-                      <span className="text-2xl sm:text-3xl">🛡️</span>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-blue-100 text-xs sm:text-sm font-medium">🛡️ Your safety net target</span>
                     </div>
+                    <p className=" text-[13px] sm:text-xs mb-3 leading-relaxed font-semibold text-white">
+                      This is the total amount you should have saved for emergencies. Keep this money liquid and accessible.
+                    </p>
                     <div className="text-xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">
                       {formatCurrency(result.minAmount)} - {formatCurrency(result.maxAmount)}
                     </div>
                     <div className="text-blue-100 text-xs sm:text-sm">
-                      {result.minMonths} to {result.maxMonths} months of expenses
+                      {result.minMonths} to {result.maxMonths} months of your expenses
                     </div>
 
                     {/* Progress bar */}
@@ -490,10 +492,13 @@ export default function EmergencyFundPlannerClient() {
                   {/* Gap Card */}
                   {result.gap.min > 0 && (
                     <div className="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg shadow-blue-100/50 border border-blue-100/50 p-4 sm:p-6">
-                      <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base">
+                      <h3 className="font-semibold text-gray-900 mb-1 flex items-center gap-2 text-sm sm:text-base">
                         <span className="text-lg sm:text-xl">📊</span>
                         Remaining to build
                       </h3>
+                      <p className="text-[10px] sm:text-xs text-gray-500 mb-3 leading-relaxed">
+                        This is the gap between what you have and what you need. Focus on building this gradually.
+                      </p>
                       <div className="text-xl sm:text-2xl font-bold text-orange-600 mb-0.5 sm:mb-1">
                         {formatCurrency(result.gap.min)} - {formatCurrency(result.gap.max)}
                       </div>
