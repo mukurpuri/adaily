@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ToolHeader } from '@/components/shared';
@@ -8,27 +8,35 @@ import {
   calculateEmergencyFund,
   getStorageOptions,
   formatCurrency,
-  formatFullCurrency,
   type JobStability,
   type HasDependents,
   type EmergencyFundResult,
 } from '@/lib/tools/emergencyFund';
 
+// Preset examples
+const presetExamples = [
+  { label: 'Stable job', expenses: '30000', stability: 'stable' as JobStability, dependents: 'no' as HasDependents, existing: '' },
+  { label: 'Variable income', expenses: '50000', stability: 'somewhat-unstable' as JobStability, dependents: 'yes' as HasDependents, existing: '' },
+  { label: 'Freelancer', expenses: '80000', stability: 'unstable' as JobStability, dependents: 'yes' as HasDependents, existing: '' },
+];
+
 export default function EmergencyFundPlannerClient() {
   const searchParams = useSearchParams();
+  const resultsRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [monthlyExpenses, setMonthlyExpenses] = useState<string>('');
   const [jobStability, setJobStability] = useState<JobStability>('stable');
   const [dependents, setDependents] = useState<HasDependents>('no');
   const [existingFund, setExistingFund] = useState<string>('');
   const [result, setResult] = useState<EmergencyFundResult | null>(null);
-  const [showResults, setShowResults] = useState(false);
+  const [hasCalculated, setHasCalculated] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+  const [showExample, setShowExample] = useState(false);
 
   // Initialize from URL params
   useEffect(() => {
     setMounted(true);
     
-    // Read query params and pre-fill form
     const expensesParam = searchParams.get('expenses');
     const stabilityParam = searchParams.get('stability');
     
@@ -36,7 +44,6 @@ export default function EmergencyFundPlannerClient() {
       setMonthlyExpenses(expensesParam);
     }
     if (stabilityParam) {
-      // Map URL param to form value
       const stabilityMap: Record<string, JobStability> = {
         'stable': 'stable',
         'somewhat': 'somewhat-unstable',
@@ -46,35 +53,61 @@ export default function EmergencyFundPlannerClient() {
     }
   }, [searchParams]);
 
-  // Calculate results whenever inputs change
+  // Auto-update results after first calculation
   useEffect(() => {
-    const expenses = parseFloat(monthlyExpenses) || 0;
-    if (expenses > 0) {
-      const calculated = calculateEmergencyFund({
-        monthlyExpenses: expenses,
-        jobStability,
-        dependents,
-        existingEmergencyFund: parseFloat(existingFund) || 0,
-      });
-      setResult(calculated);
-      setShowResults(true);
-    } else {
-      setResult(null);
-      setShowResults(false);
+    if (hasCalculated) {
+      const expenses = parseFloat(monthlyExpenses) || 0;
+      if (expenses > 0) {
+        const calculated = calculateEmergencyFund({
+          monthlyExpenses: expenses,
+          jobStability,
+          dependents,
+          existingEmergencyFund: parseFloat(existingFund) || 0,
+        });
+        setResult(calculated);
+      }
     }
-  }, [monthlyExpenses, jobStability, dependents, existingFund]);
+  }, [hasCalculated, monthlyExpenses, jobStability, dependents, existingFund]);
+
+  const handleCalculate = () => {
+    const expenses = parseFloat(monthlyExpenses) || 0;
+    if (expenses <= 0) return;
+    
+    const calculated = calculateEmergencyFund({
+      monthlyExpenses: expenses,
+      jobStability,
+      dependents,
+      existingEmergencyFund: parseFloat(existingFund) || 0,
+    });
+    setResult(calculated);
+    setHasCalculated(true);
+    
+    // Scroll to results
+    setTimeout(() => {
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
+  const applyPreset = (preset: typeof presetExamples[0]) => {
+    setMonthlyExpenses(preset.expenses);
+    setJobStability(preset.stability);
+    setDependents(preset.dependents);
+    setExistingFund(preset.existing);
+    setHasCalculated(false);
+    setResult(null);
+  };
 
   const storageOptions = getStorageOptions();
+  const isValid = parseFloat(monthlyExpenses) > 0;
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-gradient-to-b from-blue-50/50 via-white to-white">
       <ToolHeader backHref="/" backLabel="Home" />
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
         <div className="max-w-6xl mx-auto">
           {/* Title */}
-          <div className={`text-center mb-6 sm:mb-10 transition-all duration-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className={`text-center mb-6 sm:mb-8 transition-all duration-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
               <span className="text-base sm:text-lg">🛡️</span>
               Financial Safety Net
@@ -87,11 +120,135 @@ export default function EmergencyFundPlannerClient() {
             </p>
           </div>
 
+          {/* About This Tool Card - Collapsible on mobile */}
+          <div className={`mb-4 sm:mb-8 transition-all duration-500 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {/* What is an emergency fund? */}
+            <div className="bg-blue-50/50 rounded-xl sm:rounded-2xl border border-blue-100 overflow-hidden">
+              <button
+                onClick={() => setShowAbout(!showAbout)}
+                className="w-full p-4 sm:p-6 flex items-center justify-between text-left sm:cursor-default"
+              >
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2 text-sm sm:text-base">
+                  <span>📖</span> What is an emergency fund?
+                </h2>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 sm:hidden transition-transform ${showAbout ? 'rotate-180' : ''}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <div className={`px-4 pb-4 sm:px-6 sm:pb-6 sm:pt-0 ${showAbout ? 'block' : 'hidden sm:block'}`}>
+                <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed">
+                  An emergency fund is money set aside for unexpected expenses like job loss, medical emergencies, or urgent repairs. 
+                  It gives you breathing room so you don't need to borrow or sell investments during tough times.
+                </p>
+                
+                <div className="grid sm:grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <div className="bg-white rounded-lg p-2.5 sm:p-3 border border-blue-100">
+                    <div className="font-semibold text-blue-700 text-xs sm:text-sm">Stable job</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500">3-4 months of expenses</div>
+                  </div>
+                  <div className="bg-white rounded-lg p-2.5 sm:p-3 border border-blue-100">
+                    <div className="font-semibold text-amber-600 text-xs sm:text-sm">Uncertain income</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500">4-6 months of expenses</div>
+                  </div>
+                  <div className="bg-white rounded-lg p-2.5 sm:p-3 border border-blue-100">
+                    <div className="font-semibold text-red-600 text-xs sm:text-sm">Unstable / Freelance</div>
+                    <div className="text-[10px] sm:text-xs text-gray-500">6-9 months of expenses</div>
+                  </div>
+                </div>
+                
+                <p className="text-[10px] sm:text-xs text-gray-400 italic">
+                  This is educational guidance, not financial advice. Your situation may vary.
+                </p>
+              </div>
+            </div>
+
+            {/* Simple Example - Collapsible on mobile */}
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 mt-3 sm:mt-4 overflow-hidden">
+              <button
+                onClick={() => setShowExample(!showExample)}
+                className="w-full p-4 sm:p-6 flex items-center justify-between text-left sm:cursor-default"
+              >
+                <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-sm sm:text-base">
+                  A simple example 👇
+                </h3>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 sm:hidden transition-transform ${showExample ? 'rotate-180' : ''}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <div className={`px-4 pb-4 sm:px-6 sm:pb-6 sm:pt-0 ${showExample ? 'block' : 'hidden sm:block'}`}>
+                <div className="text-xs sm:text-sm text-gray-600 space-y-3">
+                  <p>
+                    Meet <span className="font-medium text-gray-800">Rahul, 28</span>, who works at an IT company in Bangalore.
+                  </p>
+                  
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="font-medium text-gray-700 mb-2">His situation:</div>
+                    <ul className="space-y-1 text-gray-600">
+                      <li>• Monthly expenses: <span className="font-medium">₹40,000</span> (rent, food, bills, EMI)</li>
+                      <li>• Job: <span className="font-medium">Stable</span> (permanent role, paid on time)</li>
+                      <li>• Dependents: <span className="font-medium">None</span></li>
+                    </ul>
+                  </div>
+                  
+                  <p>
+                    One day, Rahul's company announces layoffs. He's let go with just one month's notice. 
+                    It takes him <span className="font-medium">3 months</span> to find a new job.
+                  </p>
+                  
+                  <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                    <div className="font-medium text-blue-800 mb-1">The math:</div>
+                    <div className="text-blue-700">
+                      ₹40,000 × 3 months = <span className="font-bold">₹1,20,000</span>
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-blue-600 mt-1">
+                      This is what he needs to survive without borrowing.
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-500">
+                    <span className="font-medium text-gray-700">Important:</span> This money is not for investing or earning returns. 
+                    It's only for safety. Keep it where you can access it quickly.
+                  </p>
+                  
+                  <p className="text-gray-800 font-medium pt-1">
+                    This tool helps you find your number. ↓
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Two Column Layout */}
           <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
             {/* Left: Form */}
-            <div className={`transition-all duration-500 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`transition-all duration-500 delay-150 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl shadow-gray-100 border border-gray-100 p-4 sm:p-6 md:p-8">
+                {/* Preset Examples */}
+                <div className="mb-4 sm:mb-6">
+                  {/* <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] sm:text-xs text-gray-500">Try an example:</span>
+                  </div> */}
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    {presetExamples.map((preset, i) => (
+                      <button
+                        key={i}
+                        onClick={() => applyPreset(preset)}
+                        className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium bg-gray-100 hover:bg-blue-100 hover:text-blue-700 text-gray-600 transition-colors"
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2">
                   <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 text-sm sm:text-base">1</span>
                   Your Details
@@ -141,6 +298,12 @@ export default function EmergencyFundPlannerClient() {
                         </button>
                       ))}
                     </div>
+                    {/* Helper text for stability */}
+                    <div className="mt-2 text-[10px] sm:text-xs text-gray-400 leading-relaxed">
+                      {jobStability === 'stable' && 'Permanent job, stable monthly income'}
+                      {jobStability === 'somewhat-unstable' && 'Variable income, probation period, or freelance work'}
+                      {jobStability === 'unstable' && 'High chance of job or income disruption'}
+                    </div>
                   </div>
 
                   {/* Dependents */}
@@ -167,6 +330,11 @@ export default function EmergencyFundPlannerClient() {
                         </button>
                       ))}
                     </div>
+                    {/* Helper text for dependents */}
+                    <p className="mt-2 text-[10px] sm:text-xs text-gray-400 leading-relaxed">
+                      Dependents = people who rely on your income (spouse, kids, parents). 
+                      If you support someone financially, select Yes.
+                    </p>
                   </div>
 
                   {/* Existing Emergency Fund */}
@@ -186,18 +354,34 @@ export default function EmergencyFundPlannerClient() {
                     </div>
                     <p className="text-[10px] sm:text-xs text-gray-500 mt-1">How much have you already saved?</p>
                   </div>
+
+                  {/* Calculate Button */}
+                  <button
+                    onClick={handleCalculate}
+                    disabled={!isValid}
+                    className={`w-full py-3 sm:py-4 rounded-xl text-sm sm:text-base font-semibold transition-all flex items-center justify-center gap-2 ${
+                      isValid
+                        ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-200 hover:shadow-xl'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    Calculate my safety net
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Right: Results */}
-            <div className={`transition-all duration-500 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              {showResults && result ? (
+            <div ref={resultsRef} className={`transition-all duration-500 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              {hasCalculated && result ? (
                 <div className="space-y-4 sm:space-y-6">
                   {/* Main Result Card */}
                   <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl shadow-blue-200 p-4 sm:p-6 md:p-8 text-white">
                     <div className="flex items-center justify-between mb-3 sm:mb-4">
-                      <span className="text-blue-100 text-xs sm:text-sm font-medium">Recommended Emergency Fund</span>
+                      <span className="text-blue-100 text-xs sm:text-sm font-medium">Your safety net target</span>
                       <span className="text-2xl sm:text-3xl">🛡️</span>
                     </div>
                     <div className="text-xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">
@@ -217,7 +401,7 @@ export default function EmergencyFundPlannerClient() {
                         <div className="h-2 sm:h-3 bg-white/20 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-white rounded-full transition-all duration-500"
-                            style={{ width: `${result.percentageFunded}%` }}
+                            style={{ width: `${Math.min(result.percentageFunded, 100)}%` }}
                           />
                         </div>
                         <div className="text-[10px] sm:text-xs text-blue-100 mt-1.5 sm:mt-2">
@@ -232,13 +416,13 @@ export default function EmergencyFundPlannerClient() {
                     <div className="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg shadow-gray-100 border border-gray-100 p-4 sm:p-6">
                       <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base">
                         <span className="text-lg sm:text-xl">📊</span>
-                        Amount to Save
+                        Remaining to build
                       </h3>
                       <div className="text-xl sm:text-2xl font-bold text-orange-600 mb-0.5 sm:mb-1">
                         {formatCurrency(result.gap.min)} - {formatCurrency(result.gap.max)}
                       </div>
                       <p className="text-xs sm:text-sm text-gray-500">
-                        to reach your recommended emergency fund
+                        to reach your safety net target
                       </p>
                     </div>
                   )}
@@ -273,6 +457,40 @@ export default function EmergencyFundPlannerClient() {
                         </li>
                       ))}
                     </ul>
+                  </div>
+
+                  {/* Next Steps */}
+                  <div className="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg shadow-gray-100 border border-gray-100 p-4 sm:p-6">
+                    <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 text-sm sm:text-base">
+                      <span className="text-lg sm:text-xl">🚶</span>
+                      Next steps
+                    </h3>
+                    <ul className="space-y-3 sm:space-y-4">
+                      <li className="flex items-start gap-3">
+                        <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
+                        <div>
+                          <div className="font-medium text-gray-900 text-xs sm:text-sm">Build 1 month first</div>
+                          <div className="text-[10px] sm:text-xs text-gray-500">Start small. Even ₹{formatCurrency(parseFloat(monthlyExpenses) || 30000)} gives you a buffer.</div>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
+                        <div>
+                          <div className="font-medium text-gray-900 text-xs sm:text-sm">Reach the minimum range</div>
+                          <div className="text-[10px] sm:text-xs text-gray-500">Aim for {formatCurrency(result.minAmount)} over the next few months.</div>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
+                        <div>
+                          <div className="font-medium text-gray-900 text-xs sm:text-sm">Automate monthly saving</div>
+                          <div className="text-[10px] sm:text-xs text-gray-500">Set up auto-transfer on payday to build without thinking.</div>
+                        </div>
+                      </li>
+                    </ul>
+                    <p className="text-[10px] sm:text-xs text-gray-400 mt-4 italic">
+                      These are general steps, not personalized advice. Adjust based on your situation.
+                    </p>
                   </div>
 
                   {/* Where to keep it */}
@@ -311,10 +529,13 @@ export default function EmergencyFundPlannerClient() {
                 <div className="bg-gray-50 rounded-xl sm:rounded-2xl border-2 border-dashed border-gray-200 p-6 sm:p-8 md:p-12 text-center min-h-[200px] sm:min-h-[300px] flex flex-col items-center justify-center">
                   <span className="text-4xl sm:text-5xl mb-3 sm:mb-4">🛡️</span>
                   <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1.5 sm:mb-2">
-                    Enter your details
+                    Start with your monthly expenses
                   </h3>
-                  <p className="text-gray-500 text-xs sm:text-sm max-w-xs">
-                    Fill in the form to see your personalized emergency fund recommendation
+                  <p className="text-gray-500 text-xs sm:text-sm max-w-xs mb-4">
+                    We'll suggest a safety-net range (in months), and show where people usually keep it.
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-gray-400">
+                    ↑ Try an example above to see how it works
                   </p>
                 </div>
               )}
@@ -344,4 +565,3 @@ export default function EmergencyFundPlannerClient() {
     </div>
   );
 }
-
