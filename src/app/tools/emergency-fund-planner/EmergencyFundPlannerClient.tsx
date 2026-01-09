@@ -248,6 +248,20 @@ export default function EmergencyFundPlannerClient() {
                   </div>
                 </div>
 
+                {/* Where to keep it - brief note */}
+                <div className="bg-emerald-50 rounded-lg p-3 sm:p-4 border border-emerald-100 mb-4">
+                  <div className="flex items-start gap-2">
+                    <span className="text-lg">🏦</span>
+                    <div>
+                      <div className="font-semibold text-emerald-800 text-xs sm:text-sm mb-1">Where to keep it?</div>
+                      <div className="text-[10px] sm:text-xs text-gray-600 leading-relaxed">
+                        <span className="font-medium">Savings account</span> (instant access), <span className="font-medium">Sweep-in FD</span> (auto-converts to FD), or <span className="font-medium">Liquid funds</span> (1-2 day withdrawal). 
+                        The goal is <span className="text-emerald-700 font-medium">quick access</span>, not high returns.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Divider */}
                 <div className="border-t border-gray-100 my-4"></div>
 
