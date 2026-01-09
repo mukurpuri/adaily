@@ -165,6 +165,209 @@ function EmergencyFundPreview() {
   );
 }
 
+// Interactive Safety vs Growth Preview
+function SafetyGrowthPreview() {
+  const router = useRouter();
+  const [age, setAge] = useState('');
+  const [timeHorizon, setTimeHorizon] = useState('');
+  const [risk, setRisk] = useState('');
+
+  const handleCalculate = () => {
+    const params = new URLSearchParams();
+    if (age) params.set('age', age);
+    if (timeHorizon) params.set('time', timeHorizon);
+    if (risk) params.set('risk', risk);
+    router.push(`/tools/safety-growth-split${params.toString() ? `?${params.toString()}` : ''}`);
+  };
+
+  const isReady = age && timeHorizon;
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
+      <div className="mb-4">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-purple-200">
+          ⚖️
+        </div>
+        <h3 className="font-bold text-gray-900 text-base sm:text-lg">Safety vs Growth</h3>
+        <p className="text-sm text-gray-500">Balance your allocation</p>
+      </div>
+
+      <div className="space-y-3 mb-4">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Your age</label>
+          <input
+            type="number"
+            placeholder="30"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400"
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Time horizon</label>
+          <select
+            value={timeHorizon}
+            onChange={(e) => setTimeHorizon(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400 bg-white"
+          >
+            <option value="">Select</option>
+            <option value="short">1-3 years</option>
+            <option value="medium">3-5 years</option>
+            <option value="long">5-10 years</option>
+            <option value="very-long">10+ years</option>
+          </select>
+        </div>
+      </div>
+
+      <button
+        onClick={handleCalculate}
+        className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md hover:shadow-lg flex items-center justify-center gap-1.5"
+      >
+        {isReady ? 'See my split' : 'Find my balance'}
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+// Interactive Money Check Preview
+function MoneyCheckPreview() {
+  const router = useRouter();
+  const [income, setIncome] = useState('');
+  const [savings, setSavings] = useState('');
+
+  const handleCheck = () => {
+    const params = new URLSearchParams();
+    if (income) params.set('income', income);
+    if (savings) params.set('savings', savings);
+    router.push(`/tools/money-mistakes-checker${params.toString() ? `?${params.toString()}` : ''}`);
+  };
+
+  const isReady = income;
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
+      <div className="mb-4">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-orange-200">
+          🔍
+        </div>
+        <h3 className="font-bold text-gray-900 text-base sm:text-lg">Money Check</h3>
+        <p className="text-sm text-gray-500">Spot common mistakes early</p>
+      </div>
+
+      <div className="space-y-3 mb-4">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Monthly income</label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+            <input
+              type="number"
+              placeholder="50,000"
+              value={income}
+              onChange={(e) => setIncome(e.target.value)}
+              className="w-full pl-7 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Monthly savings</label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+            <input
+              type="number"
+              placeholder="10,000"
+              value={savings}
+              onChange={(e) => setSavings(e.target.value)}
+              className="w-full pl-7 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400"
+            />
+          </div>
+        </div>
+      </div>
+
+      <button
+        onClick={handleCheck}
+        className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md hover:shadow-lg flex items-center justify-center gap-1.5"
+      >
+        {isReady ? 'Check my habits' : 'Start money check'}
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+// Interactive Govt Schemes Preview
+function GovSchemesPreview() {
+  const router = useRouter();
+  const [ageGroup, setAgeGroup] = useState('');
+  const [goal, setGoal] = useState('');
+
+  const handleExplore = () => {
+    const params = new URLSearchParams();
+    if (ageGroup) params.set('age', ageGroup);
+    if (goal) params.set('goal', goal);
+    router.push(`/tools/government-schemes${params.toString() ? `?${params.toString()}` : ''}`);
+  };
+
+  const isReady = ageGroup && goal;
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
+      <div className="mb-4">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-teal-200">
+          🏛️
+        </div>
+        <h3 className="font-bold text-gray-900 text-base sm:text-lg">Govt Schemes</h3>
+        <p className="text-sm text-gray-500">PPF, NPS, SCSS and more</p>
+      </div>
+
+      <div className="space-y-3 mb-4">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Age group</label>
+          <select
+            value={ageGroup}
+            onChange={(e) => setAgeGroup(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400 bg-white"
+          >
+            <option value="">Select</option>
+            <option value="18-30">18-30 years</option>
+            <option value="30-45">30-45 years</option>
+            <option value="45-60">45-60 years</option>
+            <option value="60+">60+ years</option>
+          </select>
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Primary goal</label>
+          <select
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400 bg-white"
+          >
+            <option value="">Select</option>
+            <option value="safety">Safety</option>
+            <option value="tax-saving">Tax saving</option>
+            <option value="retirement">Retirement</option>
+            <option value="income">Regular income</option>
+          </select>
+        </div>
+      </div>
+
+      <button
+        onClick={handleExplore}
+        className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-md hover:shadow-lg flex items-center justify-center gap-1.5"
+      >
+        {isReady ? 'See matching schemes' : 'Explore schemes'}
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
 // Secondary tool card for "Explore More" section
 function SecondaryToolCard({ tool }: { tool: ToolItem }) {
   return (
@@ -191,7 +394,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-white">
+    <div className="min-h-[100dvh] bg-white">
       {/* Navigation */}
       <nav className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
@@ -257,15 +460,23 @@ export default function LandingPage() {
 
         {/* START HERE - Interactive Tool Previews */}
         <section className="container mx-auto px-4 sm:px-6 pb-8 sm:pb-10">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <div className="text-center mb-6">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">Start Here</h2>
-              <p className="text-sm text-gray-500">Best place to begin if you're new</p>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">All Tools</h2>
+              <p className="text-sm text-gray-500">Pick one and start exploring</p>
             </div>
             
-            <div className="grid sm:grid-cols-2 gap-4">
+            {/* Primary Tools Row */}
+            <div className="grid sm:grid-cols-2 gap-4 mb-4">
               <InvestmentExplorerPreview />
               <EmergencyFundPreview />
+            </div>
+            
+            {/* Secondary Tools Row */}
+            <div className="grid sm:grid-cols-3 gap-4">
+              <SafetyGrowthPreview />
+              <MoneyCheckPreview />
+              <GovSchemesPreview />
             </div>
             
             <p className="text-center text-xs text-gray-400 mt-4">

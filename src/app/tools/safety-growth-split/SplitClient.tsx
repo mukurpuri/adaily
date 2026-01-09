@@ -36,7 +36,7 @@ export default function SplitClient() {
   }, [age, timeHorizon, riskComfort]);
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-gradient-to-b from-purple-50/50 via-white to-white">
+    <div className="min-h-[100dvh] bg-gradient-to-br from-purple-50 via-indigo-50 to-pink-50">
       <ToolHeader />
 
       <main className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
@@ -73,21 +73,31 @@ export default function SplitClient() {
 
                   {/* Time Horizon */}
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                      When do you need this money?
+                    <label className="block text-gray-600 font-medium text-xs sm:text-sm mb-1.5 sm:mb-2">
+                      ⏱️ When do you need this money?
                     </label>
-                    <div className="grid grid-cols-3 sm:grid-cols-3 gap-1.5 sm:gap-2">
-                      {(Object.keys(timeHorizonLabels) as TimeHorizon[]).map((key) => (
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                      {[
+                        { value: '<1y', label: '<1 year', desc: 'Very soon', icon: '🏃' },
+                        { value: '1-3y', label: '1-3 years', desc: 'Short-term', icon: '📅' },
+                        { value: '3-5y', label: '3-5 years', desc: 'Medium', icon: '🎯' },
+                        { value: '5-10y', label: '5-10 years', desc: 'Long-term', icon: '🌱' },
+                        { value: '10y+', label: '10+ years', desc: 'Retirement', icon: '🏖️' },
+                      ].map((option) => (
                         <button
-                          key={key}
-                          onClick={() => setTimeHorizon(key)}
-                          className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all text-xs sm:text-sm font-medium ${
-                            timeHorizon === key
-                              ? 'border-purple-500 bg-purple-50 text-purple-700'
-                              : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                          key={option.value}
+                          onClick={() => setTimeHorizon(option.value as TimeHorizon)}
+                          className={`p-2 sm:p-3 rounded-xl border-2 transition-all text-center ${
+                            timeHorizon === option.value
+                              ? 'border-purple-500 bg-purple-50'
+                              : 'border-gray-200 hover:border-gray-300'
                           }`}
                         >
-                          {key}
+                          <div className="text-base sm:text-lg mb-0.5">{option.icon}</div>
+                          <div className={`text-[10px] sm:text-xs font-semibold ${timeHorizon === option.value ? 'text-purple-700' : 'text-gray-700'}`}>
+                            {option.label}
+                          </div>
+                          <div className="text-[9px] sm:text-[10px] text-gray-400">{option.desc}</div>
                         </button>
                       ))}
                     </div>
@@ -95,21 +105,33 @@ export default function SplitClient() {
 
                   {/* Risk Comfort */}
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                      How comfortable are you with risk?
+                    <label className="block text-gray-600 font-medium text-xs sm:text-sm mb-1.5 sm:mb-2">
+                      🎢 How do you feel about risk?
                     </label>
                     <div className="space-y-1.5 sm:space-y-2">
-                      {(Object.keys(riskComfortLabels) as RiskComfort[]).map((key) => (
+                      {[
+                        { value: 'low', label: 'Low risk', desc: 'I prefer safety. Small losses bother me.', icon: '🛡️', color: 'blue' },
+                        { value: 'medium', label: 'Medium risk', desc: 'I can handle some ups and downs for better returns.', icon: '⚖️', color: 'purple' },
+                        { value: 'high', label: 'High risk', desc: 'I\'m okay with big swings for potentially higher gains.', icon: '🚀', color: 'orange' },
+                      ].map((option) => (
                         <button
-                          key={key}
-                          onClick={() => setRiskComfort(key)}
-                          className={`w-full p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all text-left font-medium text-sm sm:text-base ${
-                            riskComfort === key
-                              ? 'border-purple-500 bg-purple-50 text-purple-700'
-                              : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                          key={option.value}
+                          onClick={() => setRiskComfort(option.value as RiskComfort)}
+                          className={`w-full p-3 sm:p-4 rounded-xl border-2 transition-all text-left ${
+                            riskComfort === option.value
+                              ? 'border-purple-500 bg-purple-50'
+                              : 'border-gray-200 hover:border-gray-300'
                           }`}
                         >
-                          {riskComfortLabels[key]}
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <span className="text-xl sm:text-2xl">{option.icon}</span>
+                            <div>
+                              <div className={`font-semibold text-sm sm:text-base ${riskComfort === option.value ? 'text-purple-700' : 'text-gray-700'}`}>
+                                {option.label}
+                              </div>
+                              <div className="text-[10px] sm:text-xs text-gray-500">{option.desc}</div>
+                            </div>
+                          </div>
                         </button>
                       ))}
                     </div>

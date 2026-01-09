@@ -150,7 +150,7 @@ export default function FirstSalaryGuidePage() {
             </Link>
             <Link
               href="/tools"
-              className="text-xs sm:text-sm text-gray-500 hover:text-orange-500 transition-colors flex items-center gap-1"
+              className="text-xs sm:text-sm text-gray-500 hover:text-orange-500 transition-colors flex items-center gap-1 font-semibold"
             >
               ← All Tools
             </Link>

@@ -38,7 +38,7 @@ export default function ToolHeader({
         
         <Link
           href={backHref}
-          className="text-xs sm:text-sm text-gray-500 hover:text-orange-500 transition-colors flex items-center gap-1"
+          className="text-xs sm:text-sm text-gray-500 hover:text-orange-500 transition-colors flex items-center gap-1 font-semibold"
         >
           ← <span className="hidden xs:inline sm:inline">{backLabel}</span><span className="xs:hidden sm:hidden">Back</span>
         </Link>

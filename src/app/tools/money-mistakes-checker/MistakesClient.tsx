@@ -13,12 +13,70 @@ import {
   type MistakesResult,
 } from '@/lib/tools/moneyMistakes';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Utility Functions for Indian Number Formatting
+// ─────────────────────────────────────────────────────────────────────────────
+
+function formatIndianNumber(num: number): string {
+  if (isNaN(num) || num === 0) return '';
+  const numStr = Math.floor(num).toString();
+  const lastThree = numStr.slice(-3);
+  const otherNumbers = numStr.slice(0, -3);
+  if (otherNumbers !== '') {
+    return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree;
+  }
+  return lastThree;
+}
+
+function numberToIndianWords(num: number): string {
+  if (isNaN(num) || num === 0) return '';
+  const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 
+                'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 
+                'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+  const numFloor = Math.floor(num);
+  
+  function formatSmallNumber(n: number): string {
+    if (n < 20) return ones[n];
+    if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + ones[n % 10] : '');
+    return ones[Math.floor(n / 100)] + ' Hundred' + (n % 100 !== 0 ? ' ' + formatSmallNumber(n % 100) : '');
+  }
+  
+  if (numFloor >= 10000000) {
+    const crores = Math.floor(numFloor / 10000000);
+    const remainder = numFloor % 10000000;
+    const croreWord = crores === 1 ? 'One Crore' : `${formatSmallNumber(crores)} Crores`;
+    return remainder > 0 ? `${croreWord} ${numberToIndianWords(remainder).replace(' Rupees', '')} Rupees` : `${croreWord} Rupees`;
+  }
+  if (numFloor >= 100000) {
+    const lakhs = Math.floor(numFloor / 100000);
+    const remainder = numFloor % 100000;
+    const lakhWord = lakhs === 1 ? 'One Lakh' : `${formatSmallNumber(lakhs)} Lakhs`;
+    return remainder > 0 ? `${lakhWord} ${numberToIndianWords(remainder).replace(' Rupees', '')} Rupees` : `${lakhWord} Rupees`;
+  }
+  if (numFloor >= 1000) {
+    const thousands = Math.floor(numFloor / 1000);
+    const remainder = numFloor % 1000;
+    const thousandWord = thousands === 1 ? 'One Thousand' : `${formatSmallNumber(thousands)} Thousand`;
+    return remainder > 0 ? `${thousandWord} ${numberToIndianWords(remainder).replace(' Rupees', '')} Rupees` : `${thousandWord} Rupees`;
+  }
+  return `${formatSmallNumber(numFloor)} Rupees`;
+}
+
 export default function MistakesClient() {
   const [mounted, setMounted] = useState(false);
-  const [income, setIncome] = useState<string>('');
-  const [savings, setSavings] = useState<string>('');
+  
+  // Raw values for calculations
+  const [incomeRaw, setIncomeRaw] = useState<number>(0);
+  const [savingsRaw, setSavingsRaw] = useState<number>(0);
+  const [emiRaw, setEmiRaw] = useState<number>(0);
+  
+  // Display values for formatted input
+  const [incomeDisplay, setIncomeDisplay] = useState<string>('');
+  const [savingsDisplay, setSavingsDisplay] = useState<string>('');
+  const [emiDisplay, setEmiDisplay] = useState<string>('');
+  
   const [whereMoneyIs, setWhereMoneyIs] = useState<WhereMoneyIs[]>([]);
-  const [debtEMI, setDebtEMI] = useState<string>('');
   const [timeHorizon, setTimeHorizon] = useState<MistakeTimeHorizon>('3-5y');
   const [result, setResult] = useState<MistakesResult | null>(null);
   const [showResults, setShowResults] = useState(false);
@@ -26,6 +84,28 @@ export default function MistakesClient() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Input handlers
+  const handleIncomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/,/g, '');
+    const numValue = parseInt(rawValue) || 0;
+    setIncomeRaw(numValue);
+    setIncomeDisplay(formatIndianNumber(numValue));
+  };
+
+  const handleSavingsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/,/g, '');
+    const numValue = parseInt(rawValue) || 0;
+    setSavingsRaw(numValue);
+    setSavingsDisplay(formatIndianNumber(numValue));
+  };
+
+  const handleEmiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/,/g, '');
+    const numValue = parseInt(rawValue) || 0;
+    setEmiRaw(numValue);
+    setEmiDisplay(formatIndianNumber(numValue));
+  };
 
   const toggleWhereMoney = (value: WhereMoneyIs) => {
     setWhereMoneyIs((prev) =>
@@ -36,16 +116,12 @@ export default function MistakesClient() {
   };
 
   const handleCheck = () => {
-    const incomeNum = parseFloat(income) || 0;
-    const savingsNum = parseFloat(savings) || 0;
-    const emiNum = parseFloat(debtEMI) || 0;
-
-    if (incomeNum > 0) {
+    if (incomeRaw > 0) {
       const calculated = checkMistakes({
-        incomeMonthly: incomeNum,
-        savingsMonthly: savingsNum,
+        incomeMonthly: incomeRaw,
+        savingsMonthly: savingsRaw,
         whereMoneyIsNow: whereMoneyIs.length > 0 ? whereMoneyIs : ['not-investing'],
-        debtEMI: emiNum,
+        debtEMI: emiRaw,
         timeHorizon,
       });
       setResult(calculated);
@@ -54,7 +130,7 @@ export default function MistakesClient() {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-gradient-to-b from-orange-50/50 via-white to-white">
+    <div className="min-h-[100dvh] bg-gradient-to-br from-orange-50 via-amber-50 to-rose-50">
       <ToolHeader />
 
       <main className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
@@ -76,36 +152,42 @@ export default function MistakesClient() {
                 <div className="space-y-4 sm:space-y-6">
                   {/* Monthly Income */}
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                      Monthly Income (after tax) <span className="text-red-500">*</span>
+                    <label className="block text-gray-600 font-medium text-xs sm:text-sm mb-1.5 sm:mb-2">
+                      💵 Monthly Income (after tax) <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium text-sm sm:text-base">₹</span>
+                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-emerald-500 font-semibold text-lg sm:text-xl">₹</span>
                       <input
-                        type="number"
-                        value={income}
-                        onChange={(e) => setIncome(e.target.value)}
+                        type="text"
+                        value={incomeDisplay}
+                        onChange={handleIncomeChange}
                         placeholder="50,000"
-                        className="w-full pl-8 sm:pl-10 pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition-all text-base sm:text-lg"
+                        className="w-full pl-9 sm:pl-11 pr-4 py-3 sm:py-4 bg-emerald-50 border border-emerald-200 rounded-xl text-gray-900 font-bold text-xl sm:text-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all text-center"
                       />
                     </div>
+                    {incomeRaw > 0 && (
+                      <p className="text-center text-xs sm:text-sm text-gray-400 mt-1.5 italic">{numberToIndianWords(incomeRaw)}</p>
+                    )}
                   </div>
 
                   {/* Monthly Savings */}
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                      Monthly Savings
+                    <label className="block text-gray-600 font-medium text-xs sm:text-sm mb-1.5 sm:mb-2">
+                      💰 Monthly Savings
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium text-sm sm:text-base">₹</span>
+                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-blue-500 font-semibold text-lg sm:text-xl">₹</span>
                       <input
-                        type="number"
-                        value={savings}
-                        onChange={(e) => setSavings(e.target.value)}
+                        type="text"
+                        value={savingsDisplay}
+                        onChange={handleSavingsChange}
                         placeholder="10,000"
-                        className="w-full pl-8 sm:pl-10 pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition-all text-base sm:text-lg"
+                        className="w-full pl-9 sm:pl-11 pr-4 py-3 sm:py-4 bg-blue-50 border border-blue-200 rounded-xl text-gray-900 font-bold text-xl sm:text-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all text-center"
                       />
                     </div>
+                    {savingsRaw > 0 && (
+                      <p className="text-center text-xs sm:text-sm text-gray-400 mt-1.5 italic">{numberToIndianWords(savingsRaw)}</p>
+                    )}
                   </div>
 
                   {/* Where is your money */}
@@ -133,38 +215,52 @@ export default function MistakesClient() {
 
                   {/* Debt EMI */}
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                      Monthly EMIs <span className="text-gray-400 text-[10px] sm:text-xs">(loans, credit cards)</span>
+                    <label className="block text-gray-600 font-medium text-xs sm:text-sm mb-1.5 sm:mb-2">
+                      📋 Monthly EMIs <span className="text-gray-400 text-[10px] sm:text-xs">(loans, credit cards)</span>
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium text-sm sm:text-base">₹</span>
+                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-orange-500 font-semibold text-lg sm:text-xl">₹</span>
                       <input
-                        type="number"
-                        value={debtEMI}
-                        onChange={(e) => setDebtEMI(e.target.value)}
+                        type="text"
+                        value={emiDisplay}
+                        onChange={handleEmiChange}
                         placeholder="0"
-                        className="w-full pl-8 sm:pl-10 pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 outline-none transition-all text-base sm:text-lg"
+                        className="w-full pl-9 sm:pl-11 pr-4 py-3 sm:py-4 bg-orange-50 border border-orange-200 rounded-xl text-gray-900 font-bold text-xl sm:text-2xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all text-center"
                       />
                     </div>
+                    {emiRaw > 0 && (
+                      <p className="text-center text-xs sm:text-sm text-gray-400 mt-1.5 italic">{numberToIndianWords(emiRaw)}</p>
+                    )}
                   </div>
 
                   {/* Time Horizon */}
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                      Investment time horizon
+                    <label className="block text-gray-600 font-medium text-xs sm:text-sm mb-1.5 sm:mb-2">
+                      ⏱️ When do you need this money?
                     </label>
                     <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-                      {timeHorizonOptions.map((option) => (
+                      {[
+                        { value: '<1y', label: 'Less than 1 year', desc: 'Emergency, upcoming expense', icon: '🏃' },
+                        { value: '1-3y', label: '1-3 years', desc: 'Short-term goals', icon: '📅' },
+                        { value: '3-5y', label: '3-5 years', desc: 'Medium-term plans', icon: '🎯' },
+                        { value: '5y+', label: '5+ years', desc: 'Long-term wealth', icon: '🌱' },
+                      ].map((option) => (
                         <button
                           key={option.value}
-                          onClick={() => setTimeHorizon(option.value)}
-                          className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all text-xs sm:text-sm font-medium ${
+                          onClick={() => setTimeHorizon(option.value as MistakeTimeHorizon)}
+                          className={`p-3 sm:p-4 rounded-xl border-2 transition-all text-left ${
                             timeHorizon === option.value
-                              ? 'border-orange-500 bg-orange-50 text-orange-700'
-                              : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                              ? 'border-orange-500 bg-orange-50'
+                              : 'border-gray-200 hover:border-gray-300'
                           }`}
                         >
-                          {option.label}
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <span className="text-base">{option.icon}</span>
+                            <span className={`text-xs sm:text-sm font-semibold ${timeHorizon === option.value ? 'text-orange-700' : 'text-gray-700'}`}>
+                              {option.label}
+                            </span>
+                          </div>
+                          <div className="text-[10px] sm:text-xs text-gray-500">{option.desc}</div>
                         </button>
                       ))}
                     </div>
@@ -173,7 +269,7 @@ export default function MistakesClient() {
                   {/* Check Button */}
                   <button
                     onClick={handleCheck}
-                    disabled={!income}
+                    disabled={incomeRaw <= 0}
                     className="w-full py-3 sm:py-4 rounded-lg sm:rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold text-base sm:text-lg shadow-lg shadow-orange-200 hover:shadow-orange-300 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Check My Habits

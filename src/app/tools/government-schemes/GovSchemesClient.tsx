@@ -31,7 +31,7 @@ export default function GovSchemesClient() {
   }, [ageGroup, goal, lockInOk]);
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-gradient-to-b from-blue-50/50 via-white to-white">
+    <div className="min-h-[100dvh] bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
       <ToolHeader />
 
       <main className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
