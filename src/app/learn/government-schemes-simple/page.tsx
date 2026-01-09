@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description: 'A simple guide to government-backed investment options.',
     url: 'https://adaily.in/learn/government-schemes-simple',
   },
+  alternates: {
+    canonical: 'https://adaily.in/learn/government-schemes-simple',
+  },
 };
 
 export default function GovernmentSchemeSimplePage() {

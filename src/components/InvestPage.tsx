@@ -9,12 +9,15 @@
  */
 
 import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import type { UserInputs, ScoredBucket } from '@/lib/scoringEngine';
 import { getRecommendations } from '@/lib/scoringEngine';
 import type { GoalType } from '@/lib/investmentBuckets';
 import { useToolAnalytics } from '@/hooks/useAnalytics';
 import { trackShare, trackModalView } from '@/lib/analytics';
+import { ToolSeoSection } from '@/components/seo';
+import { getToolSeoContent } from '@/lib/seo/toolSeoRegistry';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Utility Functions
@@ -529,6 +532,7 @@ function DetailModal({ result, capital, months, onClose }: {
 
 export default function InvestPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   
   // Analytics tracking
   const { trackCalculation, trackResultView, trackPresetClick } = useToolAnalytics('investment-explorer');
@@ -932,8 +936,8 @@ export default function InvestPage() {
         <div className="max-w-10xl mx-auto px-3 md:px-4 py-2 md:py-3 flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-3">
             <img src="/logo.svg" alt="Adaily Invest" className="w-8 h-8 md:w-10 md:h-10" />
-            <div>
-              <div className="font-bold text-base md:text-lg text-gray-900 tracking-tight">Adaily</div>
+            <div onClick={() => router.push('/')}>
+              <div className="font-bold text-base md:text-lg text-gray-900 tracking-tight cursor-pointer">Adaily</div>
               <div className="text-[10px] md:text-xs text-gray-400 hidden sm:block">Your Finance Dashboard</div>
             </div>
           </div>
@@ -1201,7 +1205,13 @@ export default function InvestPage() {
               </div>
             </div>
 
-            <div className="text-center mt-6 md:mt-8 pb-6 md:pb-8">
+            {/* SEO Content Section - Inside results area so sidebar stays fixed */}
+            {(() => {
+              const seoContent = getToolSeoContent('investment-explorer');
+              return seoContent ? <ToolSeoSection {...seoContent} accentColor="orange" /> : null;
+            })()}
+
+            <div className="text-center mt-8 md:mt-12 pb-6 md:pb-8">
               <p className="text-gray-400 text-xs md:text-sm">Made with 🧡 by <span className="text-brand font-semibold">Adaily</span></p>
             </div>
           </div>

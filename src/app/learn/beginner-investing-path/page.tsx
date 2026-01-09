@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description: 'A calm, structured path for beginners to learn investing.',
     url: 'https://adaily.in/learn/beginner-investing-path',
   },
+  alternates: {
+    canonical: 'https://adaily.in/learn/beginner-investing-path',
+  },
 };
 
 export default function BeginnerInvestingPathPage() {

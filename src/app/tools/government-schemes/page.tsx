@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import GovSchemesClient from './GovSchemesClient';
+import { ToolPageShell } from '@/components/seo';
 
 export const metadata: Metadata = {
   title: 'Government Schemes Explorer - Adaily',
@@ -18,9 +19,16 @@ export const metadata: Metadata = {
     description: 'Discover safe, government-backed investment options that fit your profile.',
     url: 'https://adaily.in/tools/government-schemes',
   },
+  alternates: {
+    canonical: 'https://adaily.in/tools/government-schemes',
+  },
 };
 
 export default function GovernmentSchemesPage() {
-  return <GovSchemesClient />;
+  return (
+    <ToolPageShell slug="government-schemes" accentColor="green">
+      <GovSchemesClient />
+    </ToolPageShell>
+  );
 }
 

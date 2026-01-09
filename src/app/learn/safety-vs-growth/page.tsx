@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description: 'Understand when to prioritize safe investments vs growth.',
     url: 'https://adaily.in/learn/safety-vs-growth',
   },
+  alternates: {
+    canonical: 'https://adaily.in/learn/safety-vs-growth',
+  },
 };
 
 export default function SafetyVsGrowthPage() {

@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     url: 'https://adaily.in/guides/first-salary',
     type: 'article',
   },
+  alternates: {
+    canonical: 'https://adaily.in/guides/first-salary',
+  },
 };
 
 // FAQ Schema for SEO

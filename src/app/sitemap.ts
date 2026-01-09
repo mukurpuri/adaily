@@ -1,7 +1,17 @@
 import { MetadataRoute } from 'next';
+import { getAllSlugs } from '@/lib/glossary/terms';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://adaily.in';
+  const glossarySlugs = getAllSlugs();
+
+  // Generate glossary term URLs
+  const glossaryTermUrls = glossarySlugs.map((slug) => ({
+    url: `${baseUrl}/glossary/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
 
   return [
     // Main pages
@@ -16,6 +26,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/glossary`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
     },
     
     // Tools
@@ -111,5 +127,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.5,
     },
+
+    // Glossary terms (generated dynamically)
+    ...glossaryTermUrls,
   ];
 }

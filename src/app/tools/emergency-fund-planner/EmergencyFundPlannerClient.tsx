@@ -652,7 +652,7 @@ export default function EmergencyFundPlannerClient() {
           </div>
 
           {/* Back to tools */}
-          <div className="text-center mt-6 sm:mt-8">
+          <div className="text-center mt-8 sm:mt-12">
             <Link
               href="/"
               className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white hover:bg-blue-600 hover:text-white text-gray-700 font-medium transition-colors text-sm sm:text-base"

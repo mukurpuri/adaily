@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description: 'Our commitment to keeping things simple and honest.',
     url: 'https://adaily.in/about/what-we-wont-do',
   },
+  alternates: {
+    canonical: 'https://adaily.in/about/what-we-wont-do',
+  },
 };
 
 const wontDoList = [

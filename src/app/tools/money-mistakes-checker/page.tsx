@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import MistakesClient from './MistakesClient';
+import { ToolPageShell } from '@/components/seo';
 
 export const metadata: Metadata = {
   title: 'Money Mistakes Checker - Adaily',
@@ -17,9 +18,16 @@ export const metadata: Metadata = {
     description: 'A gentle check on common money habits. No judgement, just insights.',
     url: 'https://adaily.in/tools/money-mistakes-checker',
   },
+  alternates: {
+    canonical: 'https://adaily.in/tools/money-mistakes-checker',
+  },
 };
 
 export default function MoneyMistakesCheckerPage() {
-  return <MistakesClient />;
+  return (
+    <ToolPageShell slug="money-mistakes-checker" accentColor="amber">
+      <MistakesClient />
+    </ToolPageShell>
+  );
 }
 

@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     description: 'A calm, practical guide for managing your first salary.',
     url: 'https://adaily.in/learn/first-salary-plan',
   },
+  alternates: {
+    canonical: 'https://adaily.in/learn/first-salary-plan',
+  },
 };
 
 export default function FirstSalaryPlanPage() {

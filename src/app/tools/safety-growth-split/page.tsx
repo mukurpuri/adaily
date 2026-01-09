@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import SplitClient from './SplitClient';
+import { ToolPageShell } from '@/components/seo';
 
 export const metadata: Metadata = {
   title: 'Safety vs Growth Split Calculator - Adaily',
@@ -17,9 +18,16 @@ export const metadata: Metadata = {
     description: 'Find the right balance between safe and growth investments.',
     url: 'https://adaily.in/tools/safety-growth-split',
   },
+  alternates: {
+    canonical: 'https://adaily.in/tools/safety-growth-split',
+  },
 };
 
 export default function SafetyGrowthSplitPage() {
-  return <SplitClient />;
+  return (
+    <ToolPageShell slug="safety-growth-split" accentColor="purple">
+      <SplitClient />
+    </ToolPageShell>
+  );
 }
 
