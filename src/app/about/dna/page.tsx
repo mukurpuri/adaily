@@ -91,7 +91,7 @@ export default function DNAPage() {
                 {[
                   { icon: '🔓', text: 'Always free. No paywalls, no premium tiers, no "unlock for ₹99".' },
                   { icon: '🚫', text: 'No signup required. Use any tool without creating an account.' },
-                  { icon: '🛡️', text: 'No data collection. We don\'t store what you enter. It stays in your browser.' },
+                  { icon: '🛡️', text: 'Your inputs stay in your browser. We use Google Analytics to improve tools, but never store your personal financial data.' },
                   { icon: '📖', text: 'Plain language only. If we can\'t explain it simply, we won\'t include it.' },
                   { icon: '🎯', text: 'Focused tools. Each tool does one thing well. No feature bloat.' },
                 ].map((item, i) => (
@@ -138,15 +138,14 @@ export default function DNAPage() {
             <h2 className="text-xl font-bold text-gray-900 mb-4">Privacy & data</h2>
             <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6">
               <p className="text-gray-700 leading-relaxed">
-                <strong>In plain English:</strong> We don't collect your data. When you use our 
-                tools, everything happens in your browser. We don't store your income, expenses, 
-                age, or any inputs you provide. We don't use cookies to track you. We don't 
-                have analytics that follow you around. We don't have a database of users because 
-                we don't have users. We have visitors who use tools and leave.
+                <strong>In plain English:</strong> Your inputs stay in your browser. When you use our 
+                tools, we don't store your income, expenses, age, or any personal details you enter. 
+                We don't have a database of users because we don't require signups.
               </p>
               <p className="text-gray-500 text-sm mt-4">
-                The only data we might see is basic website traffic (which pages are popular), 
-                and even that is anonymized.
+                We use simple analytics (Google Analytics) to understand which tools are helpful and 
+                how to improve them. This tells us things like page visits and button clicks, but 
+                never your personal financial data.
               </p>
             </div>
           </section>

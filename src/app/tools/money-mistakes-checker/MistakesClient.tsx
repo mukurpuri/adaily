@@ -247,7 +247,7 @@ export default function MistakesClient() {
           <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
             {/* Left: Form */}
             <div className={`transition-all duration-500 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <FormCard step={1} title="Your Financial Snapshot">
+              <FormCard step={1} title="Your Money Details">
                 <div className="space-y-4 sm:space-y-6">
                   {/* Monthly Income */}
                   <div>
@@ -292,21 +292,25 @@ export default function MistakesClient() {
                   {/* Where is your money */}
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                      Where is your money now? <span className="text-gray-400 text-[10px] sm:text-xs">(select all)</span>
+                      Where is your money now? <span className="text-gray-400 text-[10px] sm:text-xs">(select all that apply)</span>
                     </label>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2">
                       {whereMoneyOptions.map((option) => (
                         <button
                           key={option.value}
                           onClick={() => toggleWhereMoney(option.value)}
-                          className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl border-2 transition-all text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-1.5 ${
+                          className={`px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border-2 transition-all text-left ${
                             whereMoneyIs.includes(option.value)
-                              ? 'border-orange-500 bg-orange-50 text-orange-700'
-                              : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                              ? 'border-orange-500 bg-orange-50'
+                              : 'border-gray-200 hover:border-gray-300'
                           }`}
                         >
-                          <span className="text-sm sm:text-base">{option.icon}</span>
-                          <span className="hidden xs:inline sm:inline">{option.label}</span>
+                          <div className="flex items-center gap-1.5 sm:gap-2">
+                            <span className="text-base sm:text-lg">{option.icon}</span>
+                            <span className={`text-[10px] sm:text-xs font-medium ${whereMoneyIs.includes(option.value) ? 'text-orange-700' : 'text-gray-700'}`}>
+                              {option.label}
+                            </span>
+                          </div>
                         </button>
                       ))}
                     </div>
