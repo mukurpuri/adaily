@@ -416,7 +416,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
-        <section className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+        <section className="container mx-auto px-4 sm:px-6 pt-6 pb-4 sm:py-12 md:py-16">
           <div className="max-w-4xl mx-auto text-center">
             <div 
               className={`inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-medium mb-3 sm:mb-4 transition-all duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}
@@ -441,7 +441,7 @@ export default function LandingPage() {
             
             {/* SEO context line */}
             <p 
-              className={`text-gray-500 text-xs sm:text-sm max-w-2xl mx-auto mb-6 sm:mb-8 transition-all duration-500 delay-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}
+              className={`text-gray-500 text-xs sm:text-sm max-w-2xl mx-auto mb-2 sm:mb-8 transition-all duration-500 delay-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}
             >
               <span className="sm:hidden">Invest savings based on your goals and comfort with risk.</span>
               <span className="hidden sm:inline">Understand where to invest your savings in India, based on your goals, time, and comfort with risk.</span>
@@ -453,9 +453,9 @@ export default function LandingPage() {
         {/* START HERE - Interactive Tool Previews */}
         <section className="container mx-auto px-4 sm:px-6 pb-8 sm:pb-10">
           <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-6">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">All Tools</h2>
-              <p className="text-sm text-gray-500">Pick one and start exploring</p>
+            <div className="text-center mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-0.5 sm:mb-1">All Tools</h2>
+              <p className="text-xs sm:text-sm text-gray-500">Pick one and start exploring</p>
             </div>
             
             {/* Primary Tools Row */}
