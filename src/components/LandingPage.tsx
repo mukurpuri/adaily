@@ -405,10 +405,11 @@ export default function LandingPage() {
           </div>
 
           <Link
-            href="/invest"
+            href="/tools"
             className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm transition-colors"
           >
-            <span className="hidden sm:inline">Explore Investments →</span>
+            <span className="sm:hidden">Tools →</span>
+            <span className="hidden sm:inline">See All Tools →</span>
           </Link>
         </div>
       </nav>
@@ -427,21 +428,23 @@ export default function LandingPage() {
             <h1 
               className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight transition-all duration-500 delay-100 ${mounted ? 'opacity-100' : 'opacity-0'}`}
             >
-              Simple tools to understand{' '}
-              <span className="text-orange-500">your money</span>
+              <span className="block sm:inline">Simple tools to</span>{' '}
+              <span className="block sm:inline">understand <span className="text-orange-500 whitespace-nowrap">your money</span></span>
             </h1>
             
             <p 
               className={`text-gray-600 text-sm sm:text-base md:text-lg mb-2 sm:mb-3 transition-all duration-500 delay-200 ${mounted ? 'opacity-100' : 'opacity-0'}`}
             >
-              Free financial tools for India. No jargon, no selling, no signup.
+              <span className="sm:hidden">Free tools for India. No jargon, no signup.</span>
+              <span className="hidden sm:inline">Free financial tools for India. No jargon, no selling, no signup.</span>
             </p>
             
             {/* SEO context line */}
             <p 
-              className={`font-medium text-gray-500 text-xs sm:text-sm max-w-2xl mx-auto mb-6 sm:mb-8 transition-all duration-500 delay-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}
+              className={`text-gray-500 text-xs sm:text-sm max-w-2xl mx-auto mb-6 sm:mb-8 transition-all duration-500 delay-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}
             >
-              Understand where to invest your savings in India, based on your goals, time, and comfort with risk.
+              <span className="sm:hidden">Invest savings based on your goals and comfort with risk.</span>
+              <span className="hidden sm:inline">Understand where to invest your savings in India, based on your goals, time, and comfort with risk.</span>
             </p>
 
           </div>
