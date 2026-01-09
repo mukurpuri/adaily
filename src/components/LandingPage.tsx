@@ -29,9 +29,7 @@ function InvestmentExplorerPreview() {
     <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-orange-200">
-            🎯
-          </div>
+          <span className="text-3xl sm:text-4xl mb-2 block">🎯</span>
           <h3 className="font-bold text-gray-900 text-base sm:text-lg">Investment Explorer</h3>
           <p className="text-sm text-gray-500">Find what fits your goals</p>
         </div>
@@ -117,9 +115,7 @@ function EmergencyFundPreview() {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
       <div className="mb-4">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-blue-200">
-          🛡️
-        </div>
+        <span className="text-3xl sm:text-4xl mb-2 block">🛡️</span>
         <h3 className="font-bold text-gray-900 text-base sm:text-lg">Emergency Fund Planner</h3>
         <p className="text-sm text-gray-500">Calculate your safety net</p>
       </div>
@@ -188,9 +184,7 @@ function SafetyGrowthPreview() {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
       <div className="mb-4">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-purple-200">
-          ⚖️
-        </div>
+        <span className="text-3xl sm:text-4xl mb-2 block">⚖️</span>
         <h3 className="font-bold text-gray-900 text-base sm:text-lg">Safety vs Growth</h3>
         <p className="text-sm text-gray-500">Balance your allocation</p>
       </div>
@@ -255,9 +249,7 @@ function MoneyCheckPreview() {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
       <div className="mb-4">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-orange-200">
-          🔍
-        </div>
+        <span className="text-3xl sm:text-4xl mb-2 block">🔍</span>
         <h3 className="font-bold text-gray-900 text-base sm:text-lg">Money Check</h3>
         <p className="text-sm text-gray-500">Spot common mistakes early</p>
       </div>
@@ -324,9 +316,7 @@ function GovSchemesPreview() {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
       <div className="mb-4">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-teal-200">
-          🏛️
-        </div>
+        <span className="text-3xl sm:text-4xl mb-2 block">🏛️</span>
         <h3 className="font-bold text-gray-900 text-base sm:text-lg">Govt Schemes</h3>
         <p className="text-sm text-gray-500">PPF, NPS, SCSS and more</p>
       </div>
