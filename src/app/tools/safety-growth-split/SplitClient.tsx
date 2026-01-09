@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ToolHeader, ToolHero, FormCard, Disclaimer } from '@/components/shared';
+import { useToolAnalytics } from '@/hooks/useAnalytics';
 import {
   calculateSplit,
   timeHorizonLabels,
@@ -18,6 +19,10 @@ export default function SplitClient() {
   const [timeHorizon, setTimeHorizon] = useState<TimeHorizon>('3-5y');
   const [riskComfort, setRiskComfort] = useState<RiskComfort>('medium');
   const [result, setResult] = useState<SplitResult | null>(null);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  
+  // Analytics tracking
+  const { trackCalculation, trackResultView } = useToolAnalytics('safety-growth-split');
 
   useEffect(() => {
     setMounted(true);
@@ -32,8 +37,34 @@ export default function SplitClient() {
         riskComfort,
       });
       setResult(calculated);
+      
+      // Track only after user has interacted (not on initial load)
+      if (hasInteracted && calculated) {
+        trackCalculation({
+          age_range: ageNum < 30 ? 'under_30' : ageNum < 45 ? '30_45' : '45_plus',
+          time_horizon: timeHorizon,
+          risk_comfort: riskComfort,
+        });
+        trackResultView(`${calculated.safetyPercent}/${calculated.growthPercent} split`);
+      }
     }
-  }, [age, timeHorizon, riskComfort]);
+  }, [age, timeHorizon, riskComfort, hasInteracted, trackCalculation, trackResultView]);
+  
+  // Mark as interacted when user changes any input
+  const handleAgeChange = (value: string) => {
+    setAge(value);
+    setHasInteracted(true);
+  };
+  
+  const handleTimeHorizonChange = (value: TimeHorizon) => {
+    setTimeHorizon(value);
+    setHasInteracted(true);
+  };
+  
+  const handleRiskComfortChange = (value: RiskComfort) => {
+    setRiskComfort(value);
+    setHasInteracted(true);
+  };
 
   return (
     <div className="min-h-[100dvh] bg-gradient-to-br from-purple-50 via-indigo-50 to-pink-50">
@@ -66,7 +97,7 @@ export default function SplitClient() {
                       min="18"
                       max="80"
                       value={age}
-                      onChange={(e) => setAge(e.target.value)}
+                      onChange={(e) => handleAgeChange(e.target.value)}
                       className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all text-base sm:text-lg"
                     />
                   </div>
@@ -86,7 +117,7 @@ export default function SplitClient() {
                       ].map((option) => (
                         <button
                           key={option.value}
-                          onClick={() => setTimeHorizon(option.value as TimeHorizon)}
+                          onClick={() => handleTimeHorizonChange(option.value as TimeHorizon)}
                           className={`p-2 sm:p-3 rounded-xl border-2 transition-all text-center ${
                             timeHorizon === option.value
                               ? 'border-purple-500 bg-purple-50'
@@ -116,7 +147,7 @@ export default function SplitClient() {
                       ].map((option) => (
                         <button
                           key={option.value}
-                          onClick={() => setRiskComfort(option.value as RiskComfort)}
+                          onClick={() => handleRiskComfortChange(option.value as RiskComfort)}
                           className={`w-full p-3 sm:p-4 rounded-xl border-2 transition-all text-left ${
                             riskComfort === option.value
                               ? 'border-purple-500 bg-purple-50'

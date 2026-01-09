@@ -13,6 +13,8 @@ import { useSearchParams } from 'next/navigation';
 import type { UserInputs, ScoredBucket } from '@/lib/scoringEngine';
 import { getRecommendations } from '@/lib/scoringEngine';
 import type { GoalType } from '@/lib/investmentBuckets';
+import { useToolAnalytics } from '@/hooks/useAnalytics';
+import { trackShare, trackModalView } from '@/lib/analytics';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Utility Functions
@@ -528,6 +530,9 @@ function DetailModal({ result, capital, months, onClose }: {
 export default function InvestPage() {
   const searchParams = useSearchParams();
   
+  // Analytics tracking
+  const { trackCalculation, trackResultView, trackPresetClick } = useToolAnalytics('investment-explorer');
+  
   // Form state
   const [showResults, setShowResults] = useState(false);
   const [capitalRaw, setCapitalRaw] = useState<number>(100000);
@@ -874,7 +879,17 @@ export default function InvestPage() {
               
               {/* Submit Button - Enhanced CTA */}
               <button
-                onClick={() => setShowResults(true)}
+                onClick={() => {
+                  setShowResults(true);
+                  trackCalculation({
+                    capital_range: capitalRaw > 500000 ? 'above_5L' : capitalRaw > 100000 ? '1L_5L' : 'below_1L',
+                    time_horizon: timeHorizon,
+                    risk: riskPreference,
+                    goal: goal,
+                    beginner_mode: isBeginnerMode,
+                  });
+                  trackResultView(`${recommendations.length} options found`);
+                }}
                 className="w-full py-4 bg-gradient-to-r from-brand to-orange-500 hover:from-brand-dark hover:to-orange-600 text-white font-bold rounded-xl transition-all text-lg shadow-lg shadow-brand/30 transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 Find My Best Options →

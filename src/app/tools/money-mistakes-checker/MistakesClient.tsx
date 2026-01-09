@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ToolHeader, ToolHero, FormCard, Disclaimer } from '@/components/shared';
+import { useToolAnalytics } from '@/hooks/useAnalytics';
 import {
   checkMistakes,
   whereMoneyOptions,
@@ -66,6 +67,9 @@ function numberToIndianWords(num: number): string {
 export default function MistakesClient() {
   const [mounted, setMounted] = useState(false);
   
+  // Analytics tracking
+  const { trackCalculation, trackResultView } = useToolAnalytics('money-mistakes-checker');
+  
   // Raw values for calculations
   const [incomeRaw, setIncomeRaw] = useState<number>(0);
   const [savingsRaw, setSavingsRaw] = useState<number>(0);
@@ -126,6 +130,16 @@ export default function MistakesClient() {
       });
       setResult(calculated);
       setShowResults(true);
+      
+      // Track calculation
+      trackCalculation({
+        income_range: incomeRaw > 50000 ? 'above_50k' : 'below_50k',
+        savings_rate: savingsRaw > 0 ? Math.round((savingsRaw / incomeRaw) * 100) : 0,
+        has_emi: emiRaw > 0,
+        time_horizon: timeHorizon,
+        investment_types: whereMoneyIs.length,
+      });
+      trackResultView(`${calculated.mistakes.length} issues found`);
     }
   };
 

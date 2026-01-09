@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata: Metadata = {
   title: 'Adaily - Understand Your Investment Options',
@@ -77,6 +78,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#f97316" />
       </head>
       <body className="font-sans antialiased">
+        <GoogleAnalytics />
         {children}
       </body>
     </html>

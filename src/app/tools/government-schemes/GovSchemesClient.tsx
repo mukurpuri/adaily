@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ToolHeader, ToolHero, FormCard, Disclaimer } from '@/components/shared';
+import { useToolAnalytics } from '@/hooks/useAnalytics';
 import {
   getMatchingSchemes,
   ageGroupOptions,
@@ -19,6 +20,10 @@ export default function GovSchemesClient() {
   const [lockInOk, setLockInOk] = useState(true);
   const [schemes, setSchemes] = useState<GovScheme[]>([]);
   const [matchReasons, setMatchReasons] = useState<string[]>([]);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  
+  // Analytics tracking
+  const { trackCalculation, trackResultView } = useToolAnalytics('government-schemes');
 
   useEffect(() => {
     setMounted(true);
@@ -28,7 +33,33 @@ export default function GovSchemesClient() {
     const result = getMatchingSchemes({ ageGroup, goal, lockInOk });
     setSchemes(result.schemes);
     setMatchReasons(result.matchReasons);
-  }, [ageGroup, goal, lockInOk]);
+    
+    // Track only after user interaction
+    if (hasInteracted) {
+      trackCalculation({
+        age_group: ageGroup,
+        goal: goal,
+        lock_in_ok: lockInOk,
+      });
+      trackResultView(`${result.schemes.length} schemes found`);
+    }
+  }, [ageGroup, goal, lockInOk, hasInteracted, trackCalculation, trackResultView]);
+  
+  // Handlers with tracking
+  const handleAgeGroupChange = (value: AgeGroup) => {
+    setAgeGroup(value);
+    setHasInteracted(true);
+  };
+  
+  const handleGoalChange = (value: Goal) => {
+    setGoal(value);
+    setHasInteracted(true);
+  };
+  
+  const handleLockInChange = (value: boolean) => {
+    setLockInOk(value);
+    setHasInteracted(true);
+  };
 
   return (
     <div className="min-h-[100dvh] bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
@@ -60,7 +91,7 @@ export default function GovSchemesClient() {
                       {ageGroupOptions.map((option) => (
                         <button
                           key={option.value}
-                          onClick={() => setAgeGroup(option.value)}
+                          onClick={() => handleAgeGroupChange(option.value)}
                           className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all text-xs sm:text-sm font-medium ${
                             ageGroup === option.value
                               ? 'border-blue-500 bg-blue-50 text-blue-700'
@@ -82,7 +113,7 @@ export default function GovSchemesClient() {
                       {goalOptions.map((option) => (
                         <button
                           key={option.value}
-                          onClick={() => setGoal(option.value)}
+                          onClick={() => handleGoalChange(option.value)}
                           className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2 ${
                             goal === option.value
                               ? 'border-blue-500 bg-blue-50 text-blue-700'
@@ -103,7 +134,7 @@ export default function GovSchemesClient() {
                     </label>
                     <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                       <button
-                        onClick={() => setLockInOk(true)}
+                        onClick={() => handleLockInChange(true)}
                         className={`p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all font-medium text-sm sm:text-base ${
                           lockInOk
                             ? 'border-blue-500 bg-blue-50 text-blue-700'
@@ -114,7 +145,7 @@ export default function GovSchemesClient() {
                         Yes, I can wait
                       </button>
                       <button
-                        onClick={() => setLockInOk(false)}
+                        onClick={() => handleLockInChange(false)}
                         className={`p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all font-medium text-sm sm:text-base ${
                           !lockInOk
                             ? 'border-blue-500 bg-blue-50 text-blue-700'

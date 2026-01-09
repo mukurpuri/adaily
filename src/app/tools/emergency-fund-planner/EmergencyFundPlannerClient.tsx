@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ToolHeader } from '@/components/shared';
+import { useToolAnalytics } from '@/hooks/useAnalytics';
 import {
   calculateEmergencyFund,
   getStorageOptions,
@@ -74,6 +75,9 @@ export default function EmergencyFundPlannerClient() {
   const searchParams = useSearchParams();
   const resultsRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  
+  // Analytics tracking
+  const { trackCalculation, trackPresetClick, trackSectionExpand, trackResultView } = useToolAnalytics('emergency-fund-planner');
   
   // Raw values for calculations
   const [expensesRaw, setExpensesRaw] = useState<number>(0);
@@ -152,6 +156,15 @@ export default function EmergencyFundPlannerClient() {
     setResult(calculated);
     setHasCalculated(true);
     
+    // Track calculation
+    trackCalculation({ 
+      expenses_range: expensesRaw > 50000 ? 'above_50k' : 'below_50k',
+      stability: jobStability, 
+      has_dependents: dependents === 'yes',
+      has_existing_fund: existingFundRaw > 0,
+    });
+    trackResultView(`${calculated.minMonths}-${calculated.maxMonths} months`);
+    
     // Scroll to results
     setTimeout(() => {
       resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -169,6 +182,9 @@ export default function EmergencyFundPlannerClient() {
     setExistingFundDisplay(formatIndianNumber(existingNum));
     setHasCalculated(false);
     setResult(null);
+    
+    // Track preset click
+    trackPresetClick(preset.label);
   };
 
   const storageOptions = getStorageOptions();
@@ -198,7 +214,10 @@ export default function EmergencyFundPlannerClient() {
           <div className={`mb-4 sm:mb-8 transition-all duration-500 delay-100 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <div className="bg-white rounded-xl sm:rounded-2xl border border-blue-100 overflow-hidden">
               <button
-                onClick={() => setShowAbout(!showAbout)}
+                onClick={() => {
+                  setShowAbout(!showAbout);
+                  if (!showAbout) trackSectionExpand('about_emergency_funds');
+                }}
                 className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer hover:bg-blue-50/50 transition-colors"
               >
                 <h2 className="font-semibold text-gray-900 flex items-center gap-2 text-sm sm:text-base">

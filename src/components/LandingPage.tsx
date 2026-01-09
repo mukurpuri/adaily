@@ -4,10 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getTools } from '@/lib/tools/registry';
-import type { ToolItem } from '@/lib/tools/registry';
-
-const tools = getTools();
+import { trackHomepagePreview, trackCTAClick } from '@/lib/analytics';
 
 // Interactive Investment Explorer Preview
 function InvestmentExplorerPreview() {
@@ -17,6 +14,8 @@ function InvestmentExplorerPreview() {
   const [risk, setRisk] = useState('');
 
   const handleExplore = () => {
+    trackHomepagePreview('investment-explorer', 'submit');
+    trackCTAClick('explore_investments', 'homepage', '/invest');
     const params = new URLSearchParams();
     if (amount) params.set('amount', amount);
     if (time) params.set('time', time);
@@ -105,6 +104,8 @@ function EmergencyFundPreview() {
   const [stability, setStability] = useState('');
 
   const handleCalculate = () => {
+    trackHomepagePreview('emergency-fund-planner', 'submit');
+    trackCTAClick('plan_emergency_fund', 'homepage', '/tools/emergency-fund-planner');
     const params = new URLSearchParams();
     if (expenses) params.set('expenses', expenses);
     if (stability) params.set('stability', stability);
@@ -173,6 +174,8 @@ function SafetyGrowthPreview() {
   const [risk, setRisk] = useState('');
 
   const handleCalculate = () => {
+    trackHomepagePreview('safety-growth-split', 'submit');
+    trackCTAClick('find_balance', 'homepage', '/tools/safety-growth-split');
     const params = new URLSearchParams();
     if (age) params.set('age', age);
     if (timeHorizon) params.set('time', timeHorizon);
@@ -239,6 +242,8 @@ function MoneyCheckPreview() {
   const [savings, setSavings] = useState('');
 
   const handleCheck = () => {
+    trackHomepagePreview('money-mistakes-checker', 'submit');
+    trackCTAClick('check_habits', 'homepage', '/tools/money-mistakes-checker');
     const params = new URLSearchParams();
     if (income) params.set('income', income);
     if (savings) params.set('savings', savings);
@@ -306,6 +311,8 @@ function GovSchemesPreview() {
   const [goal, setGoal] = useState('');
 
   const handleExplore = () => {
+    trackHomepagePreview('government-schemes', 'submit');
+    trackCTAClick('explore_schemes', 'homepage', '/tools/government-schemes');
     const params = new URLSearchParams();
     if (ageGroup) params.set('age', ageGroup);
     if (goal) params.set('goal', goal);
@@ -365,24 +372,6 @@ function GovSchemesPreview() {
         </svg>
       </button>
     </div>
-  );
-}
-
-// Secondary tool card for "Explore More" section
-function SecondaryToolCard({ tool }: { tool: ToolItem }) {
-  return (
-    <Link
-      href={tool.href}
-      className="group bg-white rounded-xl border border-gray-100 p-3 sm:p-4 hover:shadow-lg hover:border-gray-200 transition-all duration-200"
-    >
-      <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-gradient-to-br ${tool.gradient} flex items-center justify-center text-xl sm:text-2xl mb-2 sm:mb-3 shadow-md ${tool.shadow} group-hover:scale-105 transition-transform`}>
-        {tool.icon}
-      </div>
-      <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-0.5 group-hover:text-orange-600 transition-colors">
-        {tool.title}
-      </h3>
-      <p className="text-xs sm:text-sm text-gray-500 line-clamp-2">{tool.description}</p>
-    </Link>
   );
 }
 
@@ -484,32 +473,6 @@ export default function LandingPage() {
             </p>
           </div>
         </section>
-
-        {/* EXPLORE MORE TOOLS - Secondary Grid */}
-        <section className="container mx-auto px-4 sm:px-6 pb-8 sm:pb-10">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-6">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">Explore More Tools</h2>
-              <p className="text-sm text-gray-500">Each tool helps you understand one aspect of money</p>
-            </div>
-            
-            <div className="grid grid-cols-3 gap-3 sm:gap-4">
-              {tools.map((tool) => (
-                <SecondaryToolCard key={tool.id} tool={tool} />
-              ))}
-            </div>
-
-            <div className="text-center mt-6">
-              <Link
-                href="/tools"
-                className="text-sm text-orange-600 hover:text-orange-700 font-medium"
-              >
-                View all tools and guides →
-              </Link>
-            </div>
-          </div>
-        </section>
-
         
       </div>
 
