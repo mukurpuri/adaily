@@ -142,6 +142,9 @@ export default function ToolsPage() {
               <Link href="/learn/glossary" className="text-gray-600 hover:text-orange-500 transition-colors">
                 Glossary
               </Link>
+              <Link href="/sitemap-index" className="text-gray-600 hover:text-orange-500 transition-colors">
+                Site Index
+              </Link>
             </div>
           </div>
         </div>

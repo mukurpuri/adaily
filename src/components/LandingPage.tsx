@@ -643,6 +643,7 @@ export default function LandingPage() {
                 <ul className="space-y-2 text-xs sm:text-sm text-gray-500">
                   <li><Link href="/about/dna" className="hover:text-orange-500 transition-colors">Our Philosophy</Link></li>
                   <li><Link href="/about/what-we-wont-do" className="hover:text-orange-500 transition-colors">What We Won't Do</Link></li>
+                  <li><Link href="/sitemap-index" className="hover:text-orange-500 transition-colors">Site Index</Link></li>
                 </ul>
               </div>
 

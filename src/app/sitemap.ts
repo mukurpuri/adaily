@@ -128,6 +128,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
 
+    // Site index (helps crawlers)
+    {
+      url: `${baseUrl}/sitemap-index`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.4,
+    },
+
     // Glossary terms (generated dynamically)
     ...glossaryTermUrls,
   ];
