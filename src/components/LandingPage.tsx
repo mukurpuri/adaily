@@ -435,8 +435,8 @@ export default function LandingPage() {
             <p 
               className={`text-gray-600 text-sm sm:text-base md:text-lg mb-2 sm:mb-3 transition-all duration-500 delay-200 ${mounted ? 'opacity-100' : 'opacity-0'}`}
             >
-              <span className="sm:hidden">Free tools for India. No jargon, no signup.</span>
-              <span className="hidden sm:inline">Free financial tools for India. No jargon, no selling, no signup.</span>
+              <span className="sm:hidden">Free tools for India 🇮🇳 No jargon, no signup.</span>
+              <span className="hidden sm:inline">Free financial tools for India 🇮🇳 No jargon, no selling, no signup.</span>
             </p>
             
             {/* SEO context line */}
