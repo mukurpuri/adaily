@@ -394,13 +394,22 @@ export default function LandingPage() {
             <Link href="/about/dna" className="text-sm text-gray-600 hover:text-orange-500 transition-colors font-semibold">About</Link>
           </div>
 
-          <Link
-            href="/tools"
-            className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm transition-colors"
-          >
-            <span className="sm:hidden">Tools →</span>
-            <span className="hidden sm:inline">See All Tools →</span>
-          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/sun"
+              className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border-2 border-amber-400 text-amber-600 hover:bg-amber-50 text-xs sm:text-sm transition-colors flex items-center gap-1.5"
+            >
+              <span>☀️</span>
+              <span>Ask Sun</span>
+            </Link>
+            <Link
+              href="/tools"
+              className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm transition-colors"
+            >
+              <span className="sm:hidden">Tools →</span>
+              <span className="hidden sm:inline">See All Tools →</span>
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -412,7 +421,7 @@ export default function LandingPage() {
               className={`inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-medium mb-3 sm:mb-4 transition-all duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}
             >
               <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              100% Free · No Signup
+              100% Free · Educational
             </div>
             
             <h1 
@@ -660,7 +669,7 @@ export default function LandingPage() {
                   <span className="font-semibold text-gray-900">Adaily</span>
                 </div>
                 <p className="text-xs text-gray-500 leading-relaxed">
-                  Simple financial tools for India. No jargon, no selling, no signup.
+                  Simple financial tools for India. No jargon, no selling.
                 </p>
               </div>
             </div>

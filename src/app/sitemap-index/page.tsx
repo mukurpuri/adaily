@@ -208,7 +208,7 @@ export default function SitemapIndexPage() {
           {/* Footer Note */}
           <div className="bg-gray-50 rounded-xl p-6 text-center">
             <p className="text-gray-600 text-sm">
-              All pages on Adaily are free to use. No signup required.
+              All pages on Adaily are free to use.
             </p>
             <p className="text-gray-400 text-xs mt-2">
               Last updated: January 2026

@@ -6,10 +6,10 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'All Tools and Guides | Adaily',
-  description: 'Free financial tools for India. Investment explorer, emergency fund planner, money check, government schemes, and educational guides. No signup required.',
+  description: 'Free financial tools for India. Investment explorer, emergency fund planner, money check, government schemes, and educational guides.',
   openGraph: {
     title: 'All Tools and Guides | Adaily',
-    description: 'Free financial tools for India. No signup required. Your data stays private.',
+    description: 'Free financial tools for India. Your data stays private.',
     url: 'https://adaily.in/tools',
   },
   alternates: {
@@ -59,7 +59,7 @@ export default function ToolsPage() {
       <div className="bg-emerald-50 border-b border-emerald-100">
         <div className="container mx-auto px-4 sm:px-6 py-2 sm:py-3 text-center">
           <p className="text-xs sm:text-sm text-emerald-700 font-medium">
-            🔒 No signup. Your data stays in your browser. Educational only.
+            🔒 Your data stays in your browser. Educational only.
           </p>
         </div>
       </div>

@@ -3,7 +3,7 @@
 
 export const SITE_NAME = 'Adaily';
 export const SITE_URL = 'https://adaily.in';
-export const SITE_DESCRIPTION = 'Free financial tools for India. No jargon, no selling, no signup.';
+export const SITE_DESCRIPTION = 'Free financial tools for India. No jargon, no selling.';
 
 /**
  * Generate a standardized page title

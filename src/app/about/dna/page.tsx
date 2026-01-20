@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Adaily is a free, simple financial education platform for Indians. Learn about our philosophy, promises, and how we build tools differently.',
   openGraph: {
     title: 'Our Philosophy - What Adaily Stands For',
-    description: 'Simple financial tools, built with care. No signup, no selling, no complexity.',
+    description: 'Simple financial tools, built with care. No selling, no complexity.',
     url: 'https://adaily.in/about/dna',
   },
   alternates: {
@@ -90,7 +90,7 @@ export default function DNAPage() {
               <ul className="space-y-4">
                 {[
                   { icon: '🔓', text: 'Always free. No paywalls, no premium tiers, no "unlock for ₹99".' },
-                  { icon: '🚫', text: 'No signup required. Use any tool without creating an account.' },
+                  { icon: '🔒', text: 'Your data stays private. We respect your privacy.' },
                   { icon: '🛡️', text: 'Your inputs stay in your browser. We use Google Analytics to improve tools, but never store your personal financial data.' },
                   { icon: '📖', text: 'Plain language only. If we can\'t explain it simply, we won\'t include it.' },
                   { icon: '🎯', text: 'Focused tools. Each tool does one thing well. No feature bloat.' },

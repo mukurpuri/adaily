@@ -900,7 +900,7 @@ export default function InvestPage() {
               </button>
               
               <p className="text-center text-xs text-gray-400 mt-2">
-                Free • No signup • Takes 30 seconds
+                Free • Takes 30 seconds
               </p>
             </div>
           </div>
