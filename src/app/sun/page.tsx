@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -217,7 +217,7 @@ async function streamChat(
   }
 }
 
-export default function SunPage() {
+function SunPageContent() {
   const searchParams = useSearchParams();
   const [inputText, setInputText] = useState('');
   const [question, setQuestion] = useState('');
@@ -326,7 +326,7 @@ export default function SunPage() {
         <div className="text-center mb-8 max-w-3xl mx-auto">
           <span className="text-5xl mb-3 block">☀️</span>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Ask Sun</h1>
-          <p className="text-gray-500">Questions everyone has but rarely asks out loud</p>
+          <p className="text-gray-500 hidden sm:block ">Questions everyone has but rarely asks out loud</p>
         </div>
 
         {/* Custom Question Input - Now First */}
@@ -442,5 +442,26 @@ export default function SunPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+// Loading fallback for Suspense
+function SunPageLoading() {
+  return (
+    <div className="min-h-[100dvh] bg-gradient-to-b from-amber-50 via-orange-50/30 to-white flex items-center justify-center">
+      <div className="text-center">
+        <span className="text-5xl mb-4 block animate-pulse">☀️</span>
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+// Wrap in Suspense for useSearchParams
+export default function SunPage() {
+  return (
+    <Suspense fallback={<SunPageLoading />}>
+      <SunPageContent />
+    </Suspense>
   );
 }
