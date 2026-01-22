@@ -95,6 +95,76 @@ function InvestmentExplorerPreview() {
   );
 }
 
+// Ask Sun Preview - AI Finance Companion
+function AskSunPreview() {
+  const router = useRouter();
+  const [question, setQuestion] = useState('');
+
+  const suggestions = [
+    "First salary tips",
+    "How much to save",
+    "SIP basics",
+  ];
+
+  const handleAsk = () => {
+    trackHomepagePreview('ask-sun', 'submit');
+    trackCTAClick('ask_sun', 'homepage', '/sun');
+    if (question.trim()) {
+      router.push(`/sun?q=${encodeURIComponent(question)}`);
+    } else {
+      router.push('/sun');
+    }
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-5 sm:p-6 hover:shadow-xl transition-all duration-200">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <span className="text-3xl sm:text-4xl mb-2 block">☀️</span>
+          <h3 className="font-bold text-gray-900 text-base sm:text-lg">Ask Sun</h3>
+          <p className="text-sm text-gray-500">Your calm finance companion</p>
+        </div>
+        <span className="px-2 py-0.5 bg-amber-500 text-white text-[10px] font-bold rounded-full uppercase">
+          AI
+        </span>
+      </div>
+
+      <div className="space-y-3 mb-4">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Ask anything about money</label>
+          <input
+            type="text"
+            placeholder="How do I start investing?"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleAsk()}
+            className="w-full px-3 py-2 text-sm border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-400 bg-white"
+          />
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {suggestions.map((s) => (
+            <button
+              key={s}
+              onClick={() => setQuestion(s)}
+              className="px-2 py-1 text-xs bg-white border border-amber-200 rounded-full text-amber-700 hover:bg-amber-100 transition-colors"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <button
+        onClick={handleAsk}
+        className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all bg-gradient-to-r from-yellow-400 to-amber-400 text-amber-900 shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 hover:from-yellow-500 hover:to-amber-500"
+      >
+        {question ? 'Ask Sun' : 'Start conversation'}
+        <span className="text-base">☀️</span>
+      </button>
+    </div>
+  );
+}
+
 // Interactive Emergency Fund Preview
 function EmergencyFundPreview() {
   const router = useRouter();
@@ -458,8 +528,9 @@ export default function LandingPage() {
             </div>
             
             {/* Primary Tools Row */}
-            <div className="grid sm:grid-cols-2 gap-4 mb-4">
+            <div className="grid sm:grid-cols-3 gap-4 mb-4">
               <InvestmentExplorerPreview />
+              <AskSunPreview />
               <EmergencyFundPreview />
             </div>
             
@@ -631,7 +702,7 @@ export default function LandingPage() {
                 <ul className="space-y-2 text-xs sm:text-sm text-gray-500">
                   <li><Link href="/invest" className="hover:text-orange-500 transition-colors">Investment Explorer</Link></li>
                   <li><Link href="/tools/emergency-fund-planner" className="hover:text-orange-500 transition-colors">Emergency Fund</Link></li>
-                  <li><Link href="/tools/safety-growth-split" className="hover:text-orange-500 transition-colors">Safety vs Growth</Link></li>
+                  <li><Link href="/sun" className="hover:text-orange-500 transition-colors">Ask Sun</Link></li>
                   <li><Link href="/tools" className="hover:text-orange-500 transition-colors">All Tools →</Link></li>
                 </ul>
               </div>
