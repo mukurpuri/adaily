@@ -4,6 +4,35 @@ import { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { event } from '@/lib/analytics';
+
+// Sun-specific analytics tracking
+const trackSunEvent = (action: string, params?: Record<string, unknown>) => {
+  event(action, {
+    tool_name: 'ask-sun',
+    event_category: 'sun',
+    ...params,
+  });
+};
+
+const trackSunQuestion = (question: string, source: 'custom' | 'preset' | 'followup') => {
+  trackSunEvent('sun_question_asked', {
+    question_source: source,
+    question_length: question.length,
+  });
+};
+
+const trackSunResponse = (responseLength: number) => {
+  trackSunEvent('sun_response_received', {
+    response_length: responseLength,
+  });
+};
+
+const trackSunFollowup = (questionIndex: number) => {
+  trackSunEvent('sun_followup_clicked', {
+    followup_index: questionIndex,
+  });
+};
 
 const generateId = () =>
   Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -113,7 +142,10 @@ function FormattedResponse({ text, onAskQuestion }: { text: string; onAskQuestio
             {followUpQuestions.map((q, idx) => (
               <button
                 key={idx}
-                onClick={() => onAskQuestion(q)}
+                onClick={() => {
+                  trackSunFollowup(idx + 1);
+                  onAskQuestion(q);
+                }}
                 className="text-left px-4 py-3 bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 rounded-xl border border-amber-200 hover:border-amber-300 text-gray-700 hover:text-gray-900 transition-all text-sm"
               >
                 {q}
@@ -252,12 +284,16 @@ function SunPageContent() {
     setQuestion(text);
     setResponse('');
     setIsStreaming(true);
+    trackSunQuestion(text, 'preset');
 
     await streamChat(
       text,
       sessionId,
       (chunk) => setResponse((prev) => prev + chunk),
-      () => setIsStreaming(false),
+      () => {
+        setIsStreaming(false);
+        trackSunResponse(response.length);
+      },
       (error) => {
         console.error(error);
         setResponse('Something went wrong. Please try again.');
@@ -266,21 +302,30 @@ function SunPageContent() {
     );
   };
 
-  const handleAsk = useCallback(async (text?: string) => {
+  const handleAsk = useCallback(async (text?: string, source: 'custom' | 'preset' | 'followup' = 'custom') => {
     const messageText = text || inputText.trim();
     if (!messageText || isStreaming) return;
+
+    // Determine source: if text is provided, it's preset/followup, otherwise custom
+    const actualSource = text ? source : 'custom';
+    trackSunQuestion(messageText, actualSource);
 
     setQuestion(messageText);
     setInputText('');
     setResponse('');
     setIsStreaming(true);
 
+    let fullResponse = '';
     await streamChat(
       messageText,
       sessionId,
-      (chunk) => setResponse((prev) => prev + chunk),
+      (chunk) => {
+        fullResponse += chunk;
+        setResponse((prev) => prev + chunk);
+      },
       () => {
         setIsStreaming(false);
+        trackSunResponse(fullResponse.length);
       },
       (error) => {
         console.error(error);
@@ -362,7 +407,7 @@ function SunPageContent() {
               {questions.map((q) => (
                 <button
                   key={q.text}
-                  onClick={() => handleAsk(q.text)}
+                  onClick={() => handleAsk(q.text, 'preset')}
                   disabled={isStreaming}
                   className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full border border-amber-100 hover:border-amber-300 hover:shadow-md transition-all text-left group disabled:opacity-50"
                 >
@@ -398,7 +443,7 @@ function SunPageContent() {
               </div>
               <div className="p-6">
                 <div className="text-gray-800 text-base sm:text-lg leading-relaxed">
-                  <FormattedResponse text={response} onAskQuestion={isStreaming ? undefined : handleAsk} />
+                  <FormattedResponse text={response} onAskQuestion={isStreaming ? undefined : (q) => handleAsk(q, 'followup')} />
                   {isStreaming && response && (
                     <span className="text-amber-500 animate-pulse">▌</span>
                   )}
@@ -421,6 +466,25 @@ function SunPageContent() {
                 >
                   Explore Tools →
                 </Link>
+              </div>
+            )}
+
+            {/* More Questions at Bottom */}
+            {!isStreaming && response && (
+              <div className="mt-10 pt-8 border-t border-amber-100">
+                <p className="text-center text-sm text-gray-500 mb-5">More questions to explore</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {questions.map((q) => (
+                    <button
+                      key={q.text}
+                      onClick={() => handleAsk(q.text, 'preset')}
+                      className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-amber-100 hover:border-amber-300 hover:shadow-md transition-all text-left group"
+                    >
+                      <span className="text-base group-hover:scale-110 transition-transform">{q.emoji}</span>
+                      <span className="text-xs text-gray-600 group-hover:text-gray-900">{q.text}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>

@@ -145,7 +145,10 @@ function AskSunPreview() {
           {suggestions.map((s) => (
             <button
               key={s}
-              onClick={() => setQuestion(s)}
+              onClick={() => {
+                trackHomepagePreview('ask-sun', 'input');
+                setQuestion(s);
+              }}
               className="px-2 py-1 text-xs bg-white border border-amber-200 rounded-full text-amber-700 hover:bg-amber-100 transition-colors"
             >
               {s}
@@ -467,14 +470,13 @@ export default function LandingPage() {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/sun"
-              className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border-2 border-amber-400 text-amber-600 hover:bg-amber-50 text-xs sm:text-sm transition-colors flex items-center gap-1.5"
+              className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white text-xs sm:text-sm transition-colors flex items-center gap-1.5 shadow-sm"
             >
-              <span>☀️</span>
               <span>Ask Sun</span>
             </Link>
             <Link
               href="/tools"
-              className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm transition-colors"
+              className="font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border-2 border-orange-400 text-orange-600 hover:bg-orange-50 text-xs sm:text-sm transition-colors"
             >
               <span className="sm:hidden">Tools →</span>
               <span className="hidden sm:inline">See All Tools →</span>
